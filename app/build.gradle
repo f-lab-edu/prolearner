@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.litholr.prolearner"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
@@ -31,6 +31,9 @@ android {
         jvmTarget = '1.8'
     }
     namespace 'com.litholr.prolearner'
+    viewBinding {
+        enabled true
+    }
 }
 
 dependencies {
