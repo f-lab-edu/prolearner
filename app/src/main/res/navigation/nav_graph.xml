@@ -10,4 +10,13 @@
         android:name="com.litholr.prolearner.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" />
+    <fragment
+        android:id="@+id/bookSearchFragment"
+        android:name="com.litholr.prolearner.ui.test.BookSearchFragment"
+        android:label="fragment_book_search"
+        tools:layout="@layout/fragment_book_search"/>
+
+    <action
+        android:id="@+id/action_splashFragment_to_bookSearchFragment"
+        app:destination="@id/bookSearchFragment" />
 </navigation>

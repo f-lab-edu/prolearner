@@ -3,13 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SplashFragment">
-
-    <TextView
-        android:layout_gravity="center"
-        android:gravity="center"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello Prolearners!" />
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/text"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hello Prolearners!" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            app:layout_constraintTop_toBottomOf="@id/text"
+            android:gravity="center"
+            android:id="@+id/search_start"
+            android:text="책 검색하러가기"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
