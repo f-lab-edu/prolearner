@@ -6,7 +6,9 @@ import android.widget.Toast
 import com.litholr.prolearner.databinding.ActivityMainBinding
 import com.litholr.prolearner.ui.base.BaseActivity
 import com.litholr.prolearner.utils.PLToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override val binding: ActivityMainBinding
         get() = ActivityMainBinding.inflate(LayoutInflater.from(this))
