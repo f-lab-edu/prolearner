@@ -6,25 +6,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.test.BookSearchFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <EditText
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="검색할 책 키워드를 입력해 주세요."
             android:inputType="text"
             android:id="@+id/query"/>
         <EditText
-            app:layout_constraintTop_toBottomOf="@id/query"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="출력할 책 개수를 입력해주세요."
             android:inputType="numberDecimal"
             android:id="@+id/number"/>
         <EditText
-            app:layout_constraintTop_toBottomOf="@id/number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="시작할 페이지 수를 입력해주세요."
@@ -34,16 +32,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/search"
-            app:layout_constraintTop_toBottomOf="@id/page"
             android:text="검색"/>
-        <TextView
-            android:id="@+id/result"
-            app:layout_constraintTop_toBottomOf="@id/search"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:background="#D6D6D6"
-            android:textColor="@color/black"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
 
 </FrameLayout>
