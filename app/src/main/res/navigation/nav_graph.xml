@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.litholr.prolearner.SplashFragment"
+        android:name="com.litholr.prolearner.ui.splash.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" />
     <fragment
@@ -15,6 +15,11 @@
         android:name="com.litholr.prolearner.ui.test.BookSearchFragment"
         android:label="fragment_book_search"
         tools:layout="@layout/fragment_book_search"/>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.litholr.prolearner.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home"/>
 
     <action
         android:id="@+id/action_splashFragment_to_bookSearchFragment"
