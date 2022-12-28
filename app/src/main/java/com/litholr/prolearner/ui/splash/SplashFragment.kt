@@ -15,7 +15,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
     private fun setListeners() {
         binding.searchStart.setOnClickListener {
-            navigateTo(it, R.id.action_splashFragment_to_bookSearchFragment)
+            navigateTo(it, R.id.toBookSearchFragment)
         }
     }
 }

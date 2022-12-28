@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -22,6 +22,12 @@
         tools:layout="@layout/fragment_home"/>
 
     <action
-        android:id="@+id/action_splashFragment_to_bookSearchFragment"
+        android:id="@+id/toBookSearchFragment"
         app:destination="@id/bookSearchFragment" />
+    <action
+        android:id="@+id/toHomeFragment"
+        app:destination="@+id/homeFragment"/>
+    <action
+        android:id="@+id/toSplashFragment"
+        app:destination="@+id/splashFragment"/>
 </navigation>
