@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -33,6 +34,9 @@ android {
     namespace 'com.litholr.prolearner'
     viewBinding {
         enabled true
+    }
+    buildFeatures {
+        dataBinding true
     }
 }
 
