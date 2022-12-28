@@ -46,6 +46,15 @@ class BookSearchFragment : Fragment() {
             }
         }
 
+        binding.list.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if(!recyclerView.canScrollVertically(1)) {
+                    PLToast.makeToast(requireContext(), "끝입니다.", Toast.LENGTH_SHORT)
+                }
+            }
+        })
+
         binding.search.setOnClickListener {
             PLToast.makeToast(
                 requireContext(),
@@ -53,6 +62,7 @@ class BookSearchFragment : Fragment() {
                 Toast.LENGTH_SHORT)
             viewModel.searchBook(binding.query.text.toString(), binding.number.text.toString().toInt(), binding.page.text.toString().toInt())
         }
+
 
 
         return binding.root
