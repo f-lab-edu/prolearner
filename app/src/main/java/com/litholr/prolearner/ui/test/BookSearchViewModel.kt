@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import api.naver.BookResult
 import api.naver.BookSearchResult
 import api.naver.NaverSearching
+import com.litholr.prolearner.utils.SecretId
 
 class BookSearchViewModel : ViewModel() {
     var query = MutableLiveData("")
