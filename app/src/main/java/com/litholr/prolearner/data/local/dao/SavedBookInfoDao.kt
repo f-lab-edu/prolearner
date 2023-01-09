@@ -1,0 +1,12 @@
+package com.litholr.prolearner.data.local.dao
+
+import androidx.room.Dao
+import androidx.room.Query
+import com.litholr.prolearner.data.local.entity.SavedBookInfo
+
+@Dao
+interface SavedBookInfoDao {
+
+    @Query("SELECT * FROM savedbookinfo")
+    fun getAll(): List<SavedBookInfo>
+}
