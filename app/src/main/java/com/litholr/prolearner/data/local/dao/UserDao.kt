@@ -11,16 +11,16 @@ interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): List<User>
 
-    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
+    @Query("SELECT * FROM user WHERE user_id IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<User>
 
     @Query("SELECT * FROM user WHERE user_name LIMIT 1")
     fun findByUserName(userName: String): User
 
-    @Query("SELECT * FROM user WHERE nickname LIMIT 1")
+    @Query("SELECT * FROM user WHERE user_nickname LIMIT 1")
     fun findByNickname(nickname: String): User
 
-    @Query("SELECT * FROM user WHERE email LIMIT 1")
+    @Query("SELECT * FROM user WHERE user_email LIMIT 1")
     fun findByEmail(email: String): User
 
     @Insert
