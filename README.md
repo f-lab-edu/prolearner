@@ -7,6 +7,8 @@
 1. 책을 검색하는 기능
 2. 책을 저장하고 학습률을 체크하는 기능
 3. 책의 목차를 가져와서 저장 및 편집
+### 앱 UI구성
+피그마 ☞ [바로가기](https://www.figma.com/file/6P7HxybYPkrshwuw7uzDYN/ProLearner?node-id=0%3A1&t=F2BcA4SDd22Hv7bE-1)
 
 ### 추후 넣고 싶은 기능
 1. 미션을 부여해서 뱃지를 받을 수 있는 기능
