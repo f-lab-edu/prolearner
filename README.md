@@ -17,4 +17,4 @@
 Room, MVVM 패턴, DI(Hilt), Navigation, ViewBinding, Firebase
 
 ## 사용 라이브러리
-1. [BookContentParser](https://github.com/ejjang2030/BookContentParser)(자체제작) : 네이버와 카카오 Search API를 사용하여 책의 목차를 파싱하는 라이브러
+1. [BookContentParser](https://github.com/ejjang2030/BookContentParser)(자체제작) : 네이버와 카카오 Search API를 사용하여 책의 목차를 파싱하는 라이브러리
