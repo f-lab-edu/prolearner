@@ -14,7 +14,7 @@
 3. 유사한 책 큐레이션이 가능하도록 하는 기능
 
 ## 필요 사용 기술
-Room, MVVM 패턴, DI(Hilt), Navigation, ViewBinding, Firebase
+Room, MVVM 패턴, DI(Hilt), Navigation, ViewBinding, Firebase, Gitflow
 
 ## 사용 라이브러리
 1. [BookContentParser](https://github.com/ejjang2030/BookContentParser)(자체제작) : 네이버와 카카오 Search API를 사용하여 책의 목차를 파싱하는 라이브러리
