@@ -1,6 +1,8 @@
 package com.litholr.prolearner.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
 import androidx.room.Query
 import com.litholr.prolearner.data.local.entity.ContentInfo
 
@@ -21,4 +23,10 @@ interface ContentInfoDao {
 
     @Query("SELECT * FROM ContentInfo WHERE parent_content_id = :parentId")
     fun getContentListFromParentOf(parentId: Int?): List<ContentInfo>
+
+    @Insert
+    fun insertContents(vararg contentInfo: ContentInfo)
+
+    @Query("DELETE FROM ContentInfo WHERE content_id = :contentId")
+    fun deleteContent(contentId: Int)
 }
