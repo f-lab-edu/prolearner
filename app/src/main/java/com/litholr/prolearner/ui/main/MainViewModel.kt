@@ -19,7 +19,7 @@ class MainViewModel: BaseViewModel() {
     var books = MutableLiveData<ArrayList<BookResult>>(ArrayList())
 
     fun searchBook() {
-        naver.searchBook(query.value!!, 10, page.value!!, "date") { call, response, t ->
+        naver.searchBook(query.value!!, 10, page.value!!, "sim") { call, response, t ->
             if(response != null) {
                 if(response.isSuccessful) {
                     var result = response.body()
