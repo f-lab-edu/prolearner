@@ -64,7 +64,7 @@ class BookSearchFragment : Fragment() {
                 requireContext(),
                 "query : ${binding.query.text} / display : ${binding.number.text} / page : ${binding.page.text}",
                 Toast.LENGTH_SHORT)
-            mainViewModel.searchBook(binding.query.text.toString(), binding.number.text.toString().toInt(), binding.page.text.toString().toInt())
+            mainViewModel.searchBook()
         }
 
 

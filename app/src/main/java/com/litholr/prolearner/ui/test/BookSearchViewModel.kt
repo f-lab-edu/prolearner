@@ -1,6 +1,5 @@
 package com.litholr.prolearner.ui.test
 
-import SecretId
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import api.naver.BookResult
 import api.naver.BookSearchResult
 import api.naver.NaverSearching
+import com.litholr.prolearner.utils.SecretId
 
 class BookSearchViewModel : ViewModel() {
     var query = MutableLiveData("")
