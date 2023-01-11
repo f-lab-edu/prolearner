@@ -31,6 +31,7 @@ import com.litholr.prolearner.ui.test.BookSearchViewModel
 import com.litholr.prolearner.utils.PLToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.coroutines.coroutineContext
+import kotlin.system.exitProcess
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
@@ -135,10 +136,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             })
             button.setOnClickListener {
 //                mainViewModel.query.postValue(search.text.toString())
+                viewModel.isInitial.postValue(true)
                 viewModel.searchBook()
             }
         }
         binding.appbar.addView(appbarSearchBinding.root)
         navController.navigate(R.id.toSearchFragment)
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }
