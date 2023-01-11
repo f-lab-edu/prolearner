@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import api.naver.BookResult
 import api.naver.NaverSearching
 import com.litholr.prolearner.ui.base.BaseViewModel
+import com.litholr.prolearner.utils.SecretId
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 @HiltViewModel
@@ -17,12 +18,8 @@ class MainViewModel: BaseViewModel() {
     var results = MutableLiveData("")
     var books = MutableLiveData<ArrayList<BookResult>>(ArrayList())
 
-    fun searchBook(query: String, display: Int = 10, page: Int = 1) {
-        if(query != this.query.value) {
-            this.query.postValue(query)
-            isInitial.postValue(true)
-        }
-        naver.searchBook(query, display, page, "date") { call, response, t ->
+    fun searchBook() {
+        naver.searchBook(query.value!!, 10, page.value!!, "date") { call, response, t ->
             if(response != null) {
                 if(response.isSuccessful) {
                     var result = response.body()

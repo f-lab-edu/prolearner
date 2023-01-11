@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -88,7 +89,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 //            Log.d(this.javaClass.simpleName, "setObservables() books -> ${it}")
 //        }
         viewModel.page.observe(this) {
-            viewModel.searchBook(viewModel.query.value!!, 10, it)
+            viewModel.searchBook()
         }
     }
 
@@ -116,22 +117,23 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
             }
-//            search.addTextChangedListener(object: TextWatcher {
-//                override fun afterTextChanged(s: Editable?) {
-//                }
-//
-//                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//                    Log.d(this.javaClass.simpleName, "beforeTextChanged : ${ s.toString() }")
-//                }
-//
-//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                    Log.d(this.javaClass.simpleName, "onTextChanged : ${ s.toString() }")
-//                    viewModel.query.postValue(s.toString())
-//                }
-//            })
+            search.addTextChangedListener(object: TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    Log.d(this.javaClass.simpleName, "afterTextChanged : ${ s.toString() }")
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    Log.d(this.javaClass.simpleName, "beforeTextChanged : ${ s.toString() }")
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    Log.d(this.javaClass.simpleName, "onTextChanged : ${ s.toString() }")
+                    viewModel.query.postValue(s.toString())
+                }
+            })
             button.setOnClickListener {
 //                mainViewModel.query.postValue(search.text.toString())
-                viewModel.searchBook(search.text.toString())
+                viewModel.searchBook()
             }
         }
         binding.appbar.addView(appbarSearchBinding.root)
