@@ -128,7 +128,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     Log.d(this.javaClass.simpleName, "onTextChanged : ${ s.toString() }")
-                    viewModel.query.postValue(s.toString())
+                    if(!s!!.isEmpty()) {
+                        viewModel.query.postValue(s.toString())
+                    }
                 }
             })
             button.setOnClickListener {
