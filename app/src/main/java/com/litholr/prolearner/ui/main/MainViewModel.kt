@@ -17,6 +17,7 @@ class MainViewModel: BaseViewModel() {
     var naver = NaverSearching(SecretId.NAVER_CLIENT_ID, SecretId.NAVER_CLIENT_ID_SECRET)
     var results = MutableLiveData("")
     var books = MutableLiveData<ArrayList<BookResult>>(ArrayList())
+    var selectedBook = MutableLiveData<BookResult>()
 
     fun searchBook() {
         naver.searchBook(query.value!!, 10, page.value!!, "sim") { call, response, t ->
