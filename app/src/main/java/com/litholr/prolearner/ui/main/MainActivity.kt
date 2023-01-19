@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,8 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override val layoutId: Int
         get() = R.layout.activity_main
-    override val viewModel: MainViewModel
-        get() = MainViewModel()
+    override val viewModel: MainViewModel by viewModels()
 
 //    lateinit var navHostFragment: NavHostFragment
 //    lateinit var navController: NavController
