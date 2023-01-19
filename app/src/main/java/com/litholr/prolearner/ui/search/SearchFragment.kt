@@ -43,28 +43,33 @@ class SearchFragment: BaseFragment<FragmentSearchBinding>() {
         }
     }
 
-    class BookAdapter(val init: ArrayList<BookResult> = ArrayList()) : RecyclerView.Adapter<BookViewHolder>() {
+    inner class BookAdapter(val array: ArrayList<BookResult> = ArrayList()) : RecyclerView.Adapter<BookViewHolder>() {
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
             return BookViewHolder(CardviewBookinfoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
 
         override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
             holder.apply {
-                bindItem(init[position])
+                bindItem(array[position])
             }
         }
 
-        override fun getItemCount(): Int = init.size
-
+        override fun getItemCount(): Int = array.size
     }
 
-    class BookViewHolder(private val bookViewBinding: CardviewBookinfoBinding): RecyclerView.ViewHolder(bookViewBinding.root) {
+    inner class BookViewHolder(private val bookViewBinding: CardviewBookinfoBinding): RecyclerView.ViewHolder(bookViewBinding.root) {
+
         fun bindItem(item: BookResult) {
             Glide.with(bookViewBinding.root.context).load(item.image).into(bookViewBinding.bookImage)
             bookViewBinding.title.text = item.title
             bookViewBinding.author.text = item.author
             bookViewBinding.publisher.text = item.publisher
             bookViewBinding.description.text = item.description
+            bookViewBinding.root.setOnClickListener {
+                mainViewModel.selectedBook.postValue(item)
+                navigateTo(it, R.id.toBookFragment)
+            }
         }
     }
 }
