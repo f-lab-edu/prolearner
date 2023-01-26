@@ -60,9 +60,7 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
         }
 
         override fun onBindViewHolder(holder: BookContentViewHolder, position: Int) {
-            holder.apply {
-                bindItem(array[position])
-            }
+            holder.bindItem(array[position])
         }
 
         override fun getItemCount(): Int = array.size

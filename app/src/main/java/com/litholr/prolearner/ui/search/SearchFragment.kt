@@ -50,9 +50,7 @@ class SearchFragment: BaseFragment<FragmentSearchBinding>() {
         }
 
         override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
-            holder.apply {
-                bindItem(array[position])
-            }
+            holder.bindItem(array[position])
         }
 
         override fun getItemCount(): Int = array.size
