@@ -39,16 +39,4 @@ class LocalDbRepository @Inject constructor(
             contentTitle
         )
     }
-    fun getContentListFromParentOf(
-        parentId: Int?
-    ): LiveData<List<ContentInfo>> = MutableLiveData(contentInfoDao.getContentListFromParentOf(parentId))
-    fun modifyContentIdentifier(
-        isbn: String,
-        contentId: Int,
-        contentIdentifier: String
-    ) {
-        contentInfoDao.modifyContentIdentifier(
-            isbn, contentId, contentIdentifier
-        )
-    }
 }
