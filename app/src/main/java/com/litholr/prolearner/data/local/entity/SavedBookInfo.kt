@@ -7,9 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class SavedBookInfo(
-    @PrimaryKey @ColumnInfo(name = "id") val id: Int,
-    @ColumnInfo(name = "isbn") val isbn: String,
+    @PrimaryKey @ColumnInfo(name = "id") val id: Int, // isbn
     @ColumnInfo(name = "start_date") val startDate: String,
-    @ColumnInfo(name = "end_date") val endDate: String,
-    @ColumnInfo(name = "content_info_id") val contentInfoId: Int
+    @ColumnInfo(name = "end_date") val endDate: String
 )

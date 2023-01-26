@@ -8,7 +8,7 @@ import com.litholr.prolearner.data.local.entity.SavedBookInfo
 @Dao
 interface SavedBookInfoDao {
 
-    @Query("SELECT * FROM savedbookinfo")
+    @Query("SELECT * FROM SavedBookInfo")
     fun getAll(): List<SavedBookInfo>
 
     @Insert
