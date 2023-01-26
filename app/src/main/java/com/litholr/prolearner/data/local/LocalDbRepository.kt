@@ -4,30 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.litholr.prolearner.data.local.dao.ContentInfoDao
 import com.litholr.prolearner.data.local.dao.SavedBookInfoDao
-import com.litholr.prolearner.data.local.dao.SearchHistoryDao
-import com.litholr.prolearner.data.local.dao.UserDao
 import com.litholr.prolearner.data.local.entity.ContentInfo
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
-import com.litholr.prolearner.data.local.entity.SearchHistory
-import com.litholr.prolearner.data.local.entity.User
 import javax.inject.Inject
 
 class LocalDbRepository @Inject constructor(
-    private val userDao: UserDao,
-    private val searchHistoryDao: SearchHistoryDao,
     private val savedBookInfoDao: SavedBookInfoDao,
     private val contentInfoDao: ContentInfoDao
 ) {
-    fun getUsersAll(): LiveData<List<User>> = MutableLiveData(userDao.getAll())
-    fun deleteUser(user: User) = userDao.delete(user)
-    fun findUserByEmail(email: String): LiveData<User> = MutableLiveData(userDao.findByEmail(email))
-    fun findUserByNickname(nickname: String): LiveData<User> = MutableLiveData(userDao.findByNickname(nickname))
-    fun insertUserAll(vararg users: User) = userDao.insertAll(*users)
-    fun loadUserAllByIds(userIds: IntArray): LiveData<List<User>> = MutableLiveData(userDao.loadAllByIds(userIds))
-
-    fun getSearchHistoryAll(): LiveData<List<SearchHistory>> = MutableLiveData(searchHistoryDao.getAll())
-    fun insertSearchHistory(searchHistory: SearchHistory) = searchHistoryDao.insert(searchHistory)
-
     fun getSavedBookInfoAll(): LiveData<List<SavedBookInfo>> = MutableLiveData(savedBookInfoDao.getAll())
     fun insertSavedBookInfo(vararg savedBookInfo: SavedBookInfo) = savedBookInfoDao.insert(*savedBookInfo)
 
