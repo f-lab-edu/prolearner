@@ -1,12 +1,19 @@
 package com.litholr.prolearner.ui.main
 
 import android.util.Log
+import android.view.View
+import androidx.databinding.Bindable
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import api.naver.BookResult
 import api.naver.NaverSearching
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.litholr.prolearner.R
 import com.litholr.prolearner.ui.base.BaseViewModel
 import com.litholr.prolearner.utils.SecretId
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MainViewModel: BaseViewModel() {
@@ -40,6 +47,27 @@ class MainViewModel: BaseViewModel() {
 
                     }
                 }
+            }
+        }
+    }
+    enum class BottomNav { HOME, SEARCH, PROFILE, BOOK, NONE }
+    val bottomNav = MutableLiveData(BottomNav.HOME)
+    fun setOnNavigationItemSelectedListener(bottomNavigationView: BottomNavigationView) {
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.home -> {
+                    bottomNav.value = BottomNav.HOME
+                    true
+                }
+                R.id.search -> {
+                    bottomNav.value = BottomNav.SEARCH
+                    true
+                }
+                R.id.profile -> {
+                    bottomNav.value = BottomNav.PROFILE
+                    true
+                }
+                else -> false
             }
         }
     }

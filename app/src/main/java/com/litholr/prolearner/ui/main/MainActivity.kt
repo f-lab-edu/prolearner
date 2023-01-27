@@ -1,35 +1,44 @@
 package com.litholr.prolearner.ui.main
 
+import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.LayoutDirection
 import android.util.Log
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.*
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.ui.unit.dp
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.GravityCompat
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.litholr.prolearner.R
 import com.litholr.prolearner.databinding.ActivityMainBinding
+import com.litholr.prolearner.databinding.AppbarBookBinding
 import com.litholr.prolearner.databinding.AppbarSearchBinding
 import com.litholr.prolearner.ui.base.BaseActivity
 import com.litholr.prolearner.ui.test.BookSearchViewModel
 import com.litholr.prolearner.utils.PLToast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kotlin.coroutines.coroutineContext
 import kotlin.system.exitProcess
 
@@ -40,18 +49,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         get() = R.layout.activity_main
     override val viewModel: MainViewModel by viewModels()
 
-    companion object {
-        val mainViewModel: MainViewModel
-            get() = MainViewModel()
-    }
-
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
     override fun onCreateBegin(savedInstanceState: Bundle?) {
         setNavigation()
-        toHome()
-        setBottomNavigationBar()
+        viewModel.setOnNavigationItemSelectedListener(binding.bottomNavigationBar)
         setObservables()
     }
 
@@ -61,52 +64,35 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.bottomNavigationBar.setupWithNavController(navController)
     }
 
-    private fun setBottomNavigationBar() {
-        binding.bottomNavigationBar.setOnNavigationItemSelectedListener {
-            binding.appbar.removeAllViews()
-            when(it.itemId) {
-                R.id.home -> {
-                    toHome()
-                    true
-                }
-                R.id.search -> {
-                    toSearch()
-                    true
-                }
-                R.id.profile -> {
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
     private fun setObservables() {
-//        viewModel.query.observe(this) {
-//            Log.d(this.javaClass.simpleName, "query : ${it}")
-//            mainViewModel.searchBook(it)
-//        }
-//        viewModel.books.observe(this) {
-//            Log.d(this.javaClass.simpleName, "setObservables() books -> ${it}")
-//        }
         viewModel.page.observe(this) {
             viewModel.searchBook()
+        }
+
+        viewModel.bottomNav.observe(this) {
+            binding.appbar.removeAllViews()
+            when(it) {
+                MainViewModel.BottomNav.HOME -> toHome()
+                MainViewModel.BottomNav.SEARCH -> toSearch()
+                MainViewModel.BottomNav.PROFILE -> {}
+                MainViewModel.BottomNav.BOOK -> toBook()
+                else -> {}
+            }
         }
     }
 
     private fun toHome() {
-        binding.appbar.addView(
-            ImageView(this@MainActivity).apply {
-                setImageDrawable(AppCompatResources.getDrawable(this@MainActivity, R.drawable.appbar_logo))
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    setMargins(12 * 4, 0, 0,0)
-                    gravity = Gravity.CENTER_VERTICAL
-                }
+        val logoImage = ImageView(this@MainActivity).apply {
+            setImageDrawable(AppCompatResources.getDrawable(this@MainActivity, R.drawable.appbar_logo))
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(12 * 4, 0, 0,0)
+                gravity = Gravity.CENTER_VERTICAL
             }
-        )
+        }
+        binding.appbar.addView(logoImage)
         navController.navigate(R.id.toHomeFragment)
     }
 
@@ -119,23 +105,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 )
             }
             search.addTextChangedListener(object: TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                    Log.d(this.javaClass.simpleName, "afterTextChanged : ${ s.toString() }")
-                }
-
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    Log.d(this.javaClass.simpleName, "beforeTextChanged : ${ s.toString() }")
-                }
-
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    Log.d(this.javaClass.simpleName, "onTextChanged : ${ s.toString() }")
                     if(!s!!.isEmpty()) {
                         viewModel.query.postValue(s.toString())
                     }
                 }
             })
             button.setOnClickListener {
-//                mainViewModel.query.postValue(search.text.toString())
                 viewModel.isInitial.postValue(true)
                 viewModel.searchBook()
             }
@@ -144,7 +122,24 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         navController.navigate(R.id.toSearchFragment)
     }
 
-    override fun onBackPressed() {
-        finish()
+    private fun toBook() {
+        val appbarBookBinding = AppbarBookBinding.inflate(LayoutInflater.from(this@MainActivity)).apply {
+            root.apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            }
+            back.setOnClickListener {
+                binding.bottomNavigationBar.visibility = View.VISIBLE
+                viewModel.bottomNav.value = MainViewModel.BottomNav.SEARCH
+            }
+            save.setOnClickListener {
+
+            }
+        }
+        binding.appbar.addView(appbarBookBinding.root)
+        binding.bottomNavigationBar.visibility = View.GONE
+        navController.navigate(R.id.toBookFragment)
     }
 }
