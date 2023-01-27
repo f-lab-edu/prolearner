@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.graphics.createBitmap
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,7 +67,7 @@ class SearchFragment: BaseFragment<FragmentSearchBinding>() {
             bookViewBinding.description.text = item.description
             bookViewBinding.root.setOnClickListener {
                 mainViewModel.selectedBook.postValue(item)
-                navigateTo(it, R.id.toBookFragment)
+                mainViewModel.bottomNav.postValue(MainViewModel.BottomNav.BOOK)
             }
         }
     }
