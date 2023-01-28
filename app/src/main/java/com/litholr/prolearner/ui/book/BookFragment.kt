@@ -1,5 +1,6 @@
 package com.litholr.prolearner.ui.book
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Toast
 import androidx.compose.ui.unit.dp
+import androidx.core.view.drawToBitmap
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import api.naver.BookResult
@@ -22,6 +25,7 @@ import com.litholr.prolearner.databinding.FragmentBookBinding
 import com.litholr.prolearner.ui.base.BaseFragment
 import com.litholr.prolearner.ui.main.MainViewModel
 import com.litholr.prolearner.utils.PLToast
+import java.net.URL
 
 class BookFragment: BaseFragment<FragmentBookBinding>() {
     override val layoutId: Int
@@ -31,15 +35,22 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
 
     override fun onCreateBegin(savedInstanceState: Bundle?) {
         mainViewModel.selectedBook.observe(this) {
-            Glide.with(binding.root.context).load(it.image).into(binding.bookImage)
-            binding.bookTitle.text = it.title
-            binding.bookAuthor.text = it.author
-            binding.bookPublisher.text = it.publisher
-            binding.bookDescription.text = it.description
+
             mainViewModel.naver.getBookCatalog(it) { bresult, catalog, call, res, t ->
                 if(res != null) {
                     if(res.isSuccessful) {
                         if(catalog != null) {
+                            Glide.with(binding.root.context).load(it.image).into(binding.bookImage)
+                            binding.bookTitle.text = catalog.title
+                            if(catalog.subtitle != null) {
+                                binding.bookSubtitle.visibility = View.VISIBLE
+                                binding.bookSubtitle.text = catalog.subtitle
+                            } else {
+                                binding.bookSubtitle.visibility = View.GONE
+                            }
+                            binding.bookAuthor.text = it.author
+                            binding.bookPublisher.text = it.publisher
+                            binding.bookDescription.text = catalog.description
                             val contentTable = catalog.contentsHtml
                             val list: MutableList<String> = BookContentParser.getBookContentTableList(contentTable)
                             val contentList = catalog.getBookContentTableList()

@@ -12,17 +12,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <ImageView
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="140dp"
-                    android:layout_height="195dp"
-                    android:layout_marginTop="93dp"
-                    android:id="@+id/book_image"
-                    android:layout_gravity="center_horizontal"
-                    android:background="#000000"
-                    android:backgroundTint="#00000000"
-                    android:elevation="20dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/image_background">
+                    <ImageView
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_width="140dp"
+                        android:layout_height="195dp"
+                        android:layout_marginTop="93dp"
+                        android:layout_marginBottom="50dp"
+                        android:id="@+id/book_image"
+                        android:layout_gravity="center"
+                        android:background="#000000"
+                        android:backgroundTint="#00000000"
+                        android:elevation="20dp"/>
+                </LinearLayout>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -33,6 +40,16 @@
                     android:textStyle="bold"
                     android:layout_marginTop="30dp"
                     android:id="@+id/book_title"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:layout_gravity="center_horizontal"
+                    tools:text="자바의 신 vol.1 기초"
+                    android:textColor="#26282D"
+                    android:textStyle="normal"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/book_subtitle"/>
                 <LinearLayout
                     android:layout_marginTop="12dp"
                     android:gravity="center_horizontal"
