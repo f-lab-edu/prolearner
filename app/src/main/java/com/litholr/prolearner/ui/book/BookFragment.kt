@@ -36,14 +36,15 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
             binding.bookAuthor.text = it.author
             binding.bookPublisher.text = it.publisher
             binding.bookDescription.text = it.description
-            mainViewModel.naver.getBookCatalog(it) { call, res, catalog, t ->
+            mainViewModel.naver.getBookCatalog(it) { bresult, catalog, call, res, t ->
                 if(res != null) {
                     if(res.isSuccessful) {
                         if(catalog != null) {
-                            val contentTable = catalog.descriptions.contentTable
+                            val contentTable = catalog.contentsHtml
                             val list: MutableList<String> = BookContentParser.getBookContentTableList(contentTable)
+                            val contentList = catalog.getBookContentTableList()
                             binding.bookContents.apply {
-                                adapter = BookContentAdapter(list)
+                                adapter = BookContentAdapter(contentList)
                                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                             }
                         }
