@@ -1,11 +1,7 @@
 package com.litholr.prolearner.ui.main
 
 import android.util.Log
-import android.view.View
-import androidx.databinding.Bindable
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import api.naver.BookResult
 import api.naver.NaverSearching
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -13,7 +9,8 @@ import com.litholr.prolearner.R
 import com.litholr.prolearner.ui.base.BaseViewModel
 import com.litholr.prolearner.utils.SecretId
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class MainViewModel: BaseViewModel() {
