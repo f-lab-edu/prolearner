@@ -27,8 +27,8 @@
         tools:text="자바의 신 자바의 신 자바의 신자바의 신 자바의 신 자바의 신자바의 신 자바의 신 자바의 신자바의 신 자바의 신 자바의 신자바의 신 자바의 신 자바의 신" />
     <View
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="#A3D1D1D1"
+        android:layout_height="1dp"
+        android:background="#41D1D1D1"
         android:layout_alignBottom="@id/content_title"
         android:layout_alignParentBottom="true"/>
     <ImageView
