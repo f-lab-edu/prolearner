@@ -1,35 +1,25 @@
 package com.litholr.prolearner.ui.book
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.Toast
-import androidx.compose.ui.unit.dp
-import androidx.core.view.drawToBitmap
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.palette.graphics.Palette
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import api.naver.BookResult
 import com.bumptech.glide.Glide
 import com.ejjang2030.bookcontentparser.BookContentParser
 import com.google.android.material.tabs.TabLayoutMediator
 import com.litholr.prolearner.R
 import com.litholr.prolearner.databinding.BookContentItemBinding
-import com.litholr.prolearner.databinding.CardviewBookinfoBinding
 import com.litholr.prolearner.databinding.FragmentBookBinding
 import com.litholr.prolearner.ui.base.BaseFragment
 import com.litholr.prolearner.ui.main.MainViewModel
 import com.litholr.prolearner.utils.PLToast
-import java.net.URL
 
 class BookFragment: BaseFragment<FragmentBookBinding>() {
     override val layoutId: Int
@@ -54,9 +44,12 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
                             } else {
                                 binding.bookSubtitle.visibility = View.GONE
                             }
-                            binding.bookAuthor.text = it.author
+                            binding.bookAuthor.text = catalog.authorList.joinToString(", ")
                             binding.bookPublisher.text = it.publisher
-                            binding.bookDescription.text = catalog.description
+
+                            binding.expandTextView.setOnExpandStateChangeListener { textView, isExpanded -> }
+                            binding.expandTextView.text = catalog.description
+                            binding.expandableText.text = catalog.description
                             val contentTable = catalog.contentsHtml
                             val list: MutableList<String> = BookContentParser.getBookContentTableList(contentTable)
                             val contentLists = catalog.getBookContentTableList()
