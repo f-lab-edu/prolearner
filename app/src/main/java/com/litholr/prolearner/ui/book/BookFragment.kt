@@ -104,33 +104,4 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
             notifyItemInserted(fragments.size - 1)
         }
     }
-
-    inner class BookContentAdapter(val array: List<String> = ArrayList()) : RecyclerView.Adapter<BookContentViewHolder>() {
-
-        val map = mutableMapOf<Int, MutableLiveData<Boolean>>()
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookContentViewHolder {
-            return BookContentViewHolder(BookContentItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        }
-
-        override fun onBindViewHolder(holder: BookContentViewHolder, position: Int) {
-            holder.bindItem(array[position])
-            map[position] = MutableLiveData(false)
-            holder.binding().check.setOnClickListener {
-                map[position]!!.postValue(!it.isSelected)
-                it.isSelected = !it.isSelected
-            }
-        }
-
-        override fun getItemCount(): Int = array.size
-    }
-
-    inner class BookContentViewHolder(private val bookContentItemBinding: BookContentItemBinding): RecyclerView.ViewHolder(bookContentItemBinding.root) {
-        fun bindItem(title: String) {
-            bookContentItemBinding.contentTitle.text = title
-        }
-        fun binding(): BookContentItemBinding {
-            return bookContentItemBinding
-        }
-    }
 }
