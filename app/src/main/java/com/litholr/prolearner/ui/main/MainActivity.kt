@@ -1,33 +1,18 @@
 package com.litholr.prolearner.ui.main
 
-import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.LayoutDirection
-import android.util.Log
 import android.view.*
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.GravityCompat
-import androidx.core.view.marginEnd
-import androidx.core.view.marginStart
-import androidx.core.view.updateLayoutParams
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.core.os.BuildCompat
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.litholr.prolearner.R
@@ -35,12 +20,7 @@ import com.litholr.prolearner.databinding.ActivityMainBinding
 import com.litholr.prolearner.databinding.AppbarBookBinding
 import com.litholr.prolearner.databinding.AppbarSearchBinding
 import com.litholr.prolearner.ui.base.BaseActivity
-import com.litholr.prolearner.ui.test.BookSearchViewModel
-import com.litholr.prolearner.utils.PLToast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
-import kotlin.system.exitProcess
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
@@ -131,8 +111,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 )
             }
             back.setOnClickListener {
-                binding.bottomNavigationBar.visibility = View.VISIBLE
-                viewModel.bottomNav.value = MainViewModel.BottomNav.SEARCH
+                toSearchBack()
             }
             save.setOnClickListener {
 
@@ -141,5 +120,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.appbar.addView(appbarBookBinding.root)
         binding.bottomNavigationBar.visibility = View.GONE
         navController.navigate(R.id.toBookFragment)
+    }
+
+    private fun toSearchBack() {
+        binding.bottomNavigationBar.visibility = View.VISIBLE
+        viewModel.bottomNav.value = MainViewModel.BottomNav.SEARCH
     }
 }
