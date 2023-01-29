@@ -90,4 +90,6 @@ dependencies {
     implementation "androidx.palette:palette-ktx:1.0.0"
 
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.ms-square:expandableTextView:0.1.4'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha01'
 }
