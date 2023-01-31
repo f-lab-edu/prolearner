@@ -8,14 +8,4 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="base_background">#FCFCFC</color>
-    <color name="base_theme_color_20">#3305AEC2</color>
-    <color name="base_theme_color_40">#6605AEC2</color>
-    <color name="base_theme_color_60">#9905AEC2</color>
-    <color name="base_theme_color_80">#CC05AEC2</color>
-    <color name="base_theme_color_100">#05AEC2</color>
-    <color name="colorAccent">#03DAC5</color>
-    <color name="colorBlack">#030303</color>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorTransparent">@android:color/transparent</color>
 </resources>

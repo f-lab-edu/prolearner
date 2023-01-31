@@ -10,8 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import api.naver.BookResult
@@ -19,8 +17,6 @@ import com.bumptech.glide.Glide
 import com.litholr.prolearner.R
 import com.litholr.prolearner.databinding.CardviewBookinfoBinding
 import com.litholr.prolearner.databinding.FragmentBookSearchBinding
-import com.litholr.prolearner.ui.main.MainActivity
-import com.litholr.prolearner.ui.main.MainViewModel
 import com.litholr.prolearner.utils.PLToast
 
 class BookSearchFragment : Fragment() {
@@ -29,8 +25,7 @@ class BookSearchFragment : Fragment() {
         fun newInstance() = BookSearchFragment()
     }
 
-    private val mainViewModel: MainViewModel by activityViewModels()
-    private val viewModel: BookSearchViewModel by viewModels()
+    private lateinit var viewModel: BookSearchViewModel
     private lateinit var binding: FragmentBookSearchBinding
 
     override fun onCreateView(
@@ -38,12 +33,13 @@ class BookSearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        viewModel = ViewModelProvider(this).get(BookSearchViewModel::class.java)
         binding = FragmentBookSearchBinding.inflate(LayoutInflater.from(requireContext()))
 
-        mainViewModel.results.observe(viewLifecycleOwner) {
+        viewModel.results.observe(viewLifecycleOwner) {
             Log.d(this.javaClass.simpleName, "viewModel.results changed to $it")
         }
-        mainViewModel.books.observe(viewLifecycleOwner) {
+        viewModel.books.observe(viewLifecycleOwner) {
             binding.list.apply {
                 adapter = BookAdapter(it)
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -64,7 +60,7 @@ class BookSearchFragment : Fragment() {
                 requireContext(),
                 "query : ${binding.query.text} / display : ${binding.number.text} / page : ${binding.page.text}",
                 Toast.LENGTH_SHORT)
-            mainViewModel.searchBook()
+            viewModel.searchBook(binding.query.text.toString(), binding.number.text.toString().toInt(), binding.page.text.toString().toInt())
         }
 
 
