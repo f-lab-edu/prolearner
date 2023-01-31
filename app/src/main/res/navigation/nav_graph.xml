@@ -21,6 +21,18 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home"/>
 
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.litholr.prolearner.ui.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search"/>
+
+    <fragment
+        android:id="@+id/bookFragment"
+        android:name="com.litholr.prolearner.ui.book.BookFragment"
+        android:label="fragment_book"
+        tools:layout="@layout/fragment_book"/>
+
     <action
         android:id="@+id/toBookSearchFragment"
         app:destination="@id/bookSearchFragment" />
@@ -30,4 +42,10 @@
     <action
         android:id="@+id/toSplashFragment"
         app:destination="@+id/splashFragment"/>
+    <action
+        android:id="@+id/toSearchFragment"
+        app:destination="@+id/searchFragment"/>
+    <action
+        android:id="@+id/toBookFragment"
+        app:destination="@+id/bookFragment"/>
 </navigation>

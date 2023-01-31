@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <import type="com.litholr.prolearner.ui.main.MainViewModel.BottomNav"/>
+        <import type="android.view.View"/>
+        <variable
+            name="bottomNav"
+            type="BottomNav" />
+        <variable
+            name="mainViewModel"
+            type="com.litholr.prolearner.ui.main.MainViewModel"/>
+    </data>
     <com.litholr.prolearner.ui.base.BaseLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -12,9 +22,98 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
-            android:elevation="4dp"
+            android:elevation="10dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:contentInsetLeft="0dp"
+            android:contentInsetStart="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            android:contentInsetRight="0dp"
+            android:contentInsetEnd="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetEnd="0dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/logo"
+                android:layout_marginStart="12dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="@{bottomNav == BottomNav.HOME ? View.VISIBLE : View.GONE}"
+                android:src="@drawable/appbar_logo"/>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:id="@+id/toolbar_search"
+                android:visibility="@{bottomNav == BottomNav.SEARCH ? View.VISIBLE : View.GONE}"
+                android:weightSum="6"
+                android:padding="6dp"
+                android:paddingVertical="4dp"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:paddingHorizontal="12dp"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="6dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/bg_searchbox">
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginEnd="6dp"
+                        android:src="@drawable/ic_search"
+                        android:layout_gravity="center_vertical"/>
+                    <EditText
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="검색어를 입력해 주세요"
+                        android:id="@+id/search"
+                        android:textSize="16sp"
+                        android:textColorHint="#9393AA"
+                        android:paddingVertical="10dp"
+                        android:background="#00000000"/>
+                </LinearLayout>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="검색"
+                    android:textSize="16sp"
+                    android:id="@+id/search_button"
+                    android:textColor="@color/white"
+                    android:background="@drawable/bg_search_button"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:id="@+id/toolbar_book"
+                android:weightSum="6"
+                android:visibility="@{bottomNav == BottomNav.BOOK ? View.VISIBLE : View.GONE}"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="18dp"
+                android:layout_height="match_parent">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/back"
+                    android:onClick="@{() -> mainViewModel.toSearchBack()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_back"
+                    android:background="#00000000"/>
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_save"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="#00000000"
+                    android:id="@+id/save"/>
+            </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
@@ -35,6 +134,7 @@
             app:itemTextColor="@color/selector_menu_item_color"
             app:labelVisibilityMode="unlabeled"
             android:layout_width="match_parent"
+            android:visibility="@{mainViewModel.bottomNav == BottomNav.BOOK? View.GONE : View.VISIBLE}"
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_navigation_menu">
         </com.google.android.material.bottomnavigation.BottomNavigationView>
