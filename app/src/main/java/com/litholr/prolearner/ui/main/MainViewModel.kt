@@ -9,7 +9,6 @@ import com.litholr.prolearner.R
 import com.litholr.prolearner.ui.base.BaseViewModel
 import com.litholr.prolearner.utils.SecretId
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.*
 import kotlin.collections.ArrayList
 
 @HiltViewModel
@@ -67,5 +66,14 @@ class MainViewModel: BaseViewModel() {
                 else -> false
             }
         }
+    }
+
+    fun onSearchButtonClick() {
+        isInitial.postValue(true)
+        searchBook()
+    }
+
+    fun toSearchBack() {
+        bottomNav.value = BottomNav.SEARCH
     }
 }
