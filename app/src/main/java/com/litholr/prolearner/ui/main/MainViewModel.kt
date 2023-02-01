@@ -1,6 +1,7 @@
 package com.litholr.prolearner.ui.main
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import api.naver.BookResult
 import api.naver.NaverSearching
@@ -15,12 +16,13 @@ import kotlin.collections.ArrayList
 class MainViewModel: BaseViewModel() {
     var query = MutableLiveData("")
     var isInitial = MutableLiveData(true)
-    var display = MutableLiveData(10)
     var page = MutableLiveData(1)
     var naver = NaverSearching(SecretId.NAVER_CLIENT_ID, SecretId.NAVER_CLIENT_ID_SECRET)
     var results = MutableLiveData("")
     var books = MutableLiveData<ArrayList<BookResult>>(ArrayList())
     var selectedBook = MutableLiveData<BookResult>()
+
+    var plToastListener: PLToastListener? = null
 
     fun searchBook() {
         naver.searchBook(query.value!!, 10, page.value!!, "sim") { call, response, t ->
@@ -29,7 +31,7 @@ class MainViewModel: BaseViewModel() {
                     var result = response.body()
                     Log.d(this.javaClass.simpleName, "search : $result")
                     results.postValue(result.toString())
-                    if(result != null) {
+                    if((result != null) && (result.items.size != 0)) {
                         if(isInitial.value == true) {
                             isInitial.postValue(false)
                             books.postValue(ArrayList(result.items))
@@ -40,7 +42,8 @@ class MainViewModel: BaseViewModel() {
                             array.addAll(ArrayList(result.items))
                             books.postValue(array)
                         }
-
+                    } else {
+                        plToastListener?.printToast("검색결과가 없습니다.")
                     }
                 }
             }
@@ -75,5 +78,13 @@ class MainViewModel: BaseViewModel() {
 
     fun toSearchBack() {
         bottomNav.value = BottomNav.SEARCH
+    }
+
+    fun setPLToastListener(plToastListener: PLToastListener) {
+        this.plToastListener = plToastListener
+    }
+
+    interface PLToastListener {
+        fun printToast(message: String, term: Int = Toast.LENGTH_SHORT)
     }
 }
