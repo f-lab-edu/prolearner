@@ -99,8 +99,7 @@
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:id="@+id/back"
-                    android:onClick="@{() -> mainViewModel.toSearchBack()}"
+                    android:id="@+id/back_button_of_book"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_arrow_back"
