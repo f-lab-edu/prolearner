@@ -43,8 +43,18 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
                         } else {
                             binding.bookSubtitle.visibility = View.GONE
                         }
-                        binding.bookAuthor.text = catalog.authorList.joinToString(", ")
-                        binding.bookPublisher.text = it.publisher
+                        binding.infoAuthor.apply {
+                            title.text = "저자"
+                            text.text = catalog.authorList.joinToString(", ")
+                        }
+                        binding.infoPublisher.apply {
+                            title.text = "출판사"
+                            text.text = catalog.publisher
+                        }
+                        binding.infoResourceFrom.apply {
+                            title.text = "정보제공"
+                            text.text = catalog.contentsSourceMallName ?: "미확인"
+                        }
 
                         binding.expandTextView.setOnExpandStateChangeListener { textView, isExpanded -> }
                         binding.expandTextView.text = catalog.description

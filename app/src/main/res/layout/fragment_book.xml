@@ -61,7 +61,38 @@
                     android:textStyle="normal"
                     android:layout_marginTop="5dp"
                     android:id="@+id/book_subtitle"/>
-                <TextView
+                <LinearLayout
+                    android:weightSum="3"
+                    android:layout_marginHorizontal="14dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <include layout="@layout/layout_info_chip"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="6dp"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="5dp"
+                        android:id="@+id/info_author"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <include layout="@layout/layout_info_chip"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="6dp"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="5dp"
+                        android:id="@+id/info_publisher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <include layout="@layout/layout_info_chip"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="6dp"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="5dp"
+                        android:id="@+id/info_resource_from"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <!-- <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/book_author"
@@ -84,12 +115,13 @@
                     android:fontFamily="@font/noto_sans_kr_thin"
                     tools:text="로드북"
                     android:id="@+id/book_publisher"/>
+                -->
                 <com.ms.square.android.expandabletextview.ExpandableTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginVertical="20dp"
-                    android:elevation="13dp"
+                    android:elevation="5dp"
                     android:id="@+id/expand_text_view"
                     android:background="@drawable/bg_book_description"
                     app:maxCollapsedLines="4"
@@ -114,8 +146,6 @@
                         android:layout_gravity="end|bottom"
                         android:background="#00000000" />
                 </com.ms.square.android.expandabletextview.ExpandableTextView>
-
-
                 <com.google.android.material.tabs.TabLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -128,13 +158,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/viewpager_main"/>
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="30dp"-->
-<!--                    android:id="@+id/book_contents">-->
-
-<!--                </androidx.recyclerview.widget.RecyclerView>-->
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>
