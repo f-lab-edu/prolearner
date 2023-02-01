@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.litholr.prolearner.R
 import com.litholr.prolearner.databinding.ActivityMainBinding
 import com.litholr.prolearner.ui.base.BaseActivity
+import com.litholr.prolearner.utils.PLToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,6 +69,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         })
         binding.searchButton.setOnClickListener {
             viewModel.onSearchButtonClick()
+        }
+        viewModel.setPLToastListener(object: MainViewModel.PLToastListener {
+            override fun printToast(message: String, term: Int) {
+                PLToast.makeToast(this@MainActivity, message, term)
+            }
+        })
+        binding.backButtonOfBook.setOnClickListener {
+            viewModel.toSearchBack()
         }
     }
 }

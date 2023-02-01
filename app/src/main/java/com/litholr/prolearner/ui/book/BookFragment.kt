@@ -33,29 +33,33 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
         initViewPage()
         mainViewModel.selectedBook.observe(this) {
             mainViewModel.naver.getBookCatalog(it) { bresult, catalog, call, res, t ->
-                if(res != null) {
-                    if(res.isSuccessful) {
-                        if(catalog != null) {
-                            Glide.with(binding.root.context).load(it.image).into(binding.bookImage)
-                            binding.bookTitle.text = catalog.title
-                            if(catalog.subtitle != null) {
-                                binding.bookSubtitle.visibility = View.VISIBLE
-                                binding.bookSubtitle.text = catalog.subtitle
-                            } else {
-                                binding.bookSubtitle.visibility = View.GONE
-                            }
-                            binding.bookAuthor.text = catalog.authorList.joinToString(", ")
-                            binding.bookPublisher.text = it.publisher
+                if((res != null) && res.isSuccessful) {
+                    if(catalog != null) {
+                        Glide.with(binding.root.context).load(it.image).into(binding.bookImage)
+                        binding.bookTitle.text = catalog.title
+                        if(catalog.subtitle != null) {
+                            binding.bookSubtitle.visibility = View.VISIBLE
+                            binding.bookSubtitle.text = catalog.subtitle
+                        } else {
+                            binding.bookSubtitle.visibility = View.GONE
+                        }
+                        binding.bookAuthor.text = catalog.authorList.joinToString(", ")
+                        binding.bookPublisher.text = it.publisher
 
-                            binding.expandTextView.setOnExpandStateChangeListener { textView, isExpanded -> }
-                            binding.expandTextView.text = catalog.description
-                            binding.expandableText.text = catalog.description
-                            val contentTable = catalog.contentsHtml
-                            val list: MutableList<String> = BookContentParser.getBookContentTableList(contentTable)
-                            val contentLists = catalog.getBookContentTableList()
+                        binding.expandTextView.setOnExpandStateChangeListener { textView, isExpanded -> }
+                        binding.expandTextView.text = catalog.description
+                        binding.expandableText.text = catalog.description
+                        val contentTable = catalog.contentsHtml
+                        val contentLists = catalog.getBookContentTableList()
+                        if(contentLists != null) {
                             viewPager2Adapter.addFragment(ContentsFragment(contentLists))
                             viewPager2Adapter.addFragment(GoalsFragment())
+                        } else {
+                            mainViewModel.plToastListener?.printToast("목차정보가 없습니다.")
                         }
+                    } else {
+                        mainViewModel.plToastListener?.printToast("책의 정보를 불러오지 못했습니다.")
+                        mainViewModel.bottomNav.value = MainViewModel.BottomNav.SEARCH
                     }
                 }
             }
