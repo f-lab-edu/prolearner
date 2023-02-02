@@ -1,7 +1,7 @@
 package com.litholr.prolearner.ui.main
 
 import android.util.Log
-import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import api.naver.BookResult
 import api.naver.NaverSearching
@@ -14,15 +14,23 @@ import kotlin.collections.ArrayList
 
 @HiltViewModel
 class MainViewModel: BaseViewModel() {
-    var query = MutableLiveData("")
-    var isInitial = MutableLiveData(true)
+    val _query = MutableLiveData("")
+    val query: LiveData<String?>
+        get() = _query
     var page = MutableLiveData(1)
     var naver = NaverSearching(SecretId.NAVER_CLIENT_ID, SecretId.NAVER_CLIENT_ID_SECRET)
     var results = MutableLiveData("")
     var books = MutableLiveData<ArrayList<BookResult>>(ArrayList())
     var selectedBook = MutableLiveData<BookResult>()
 
-    var plToastListener: PLToastListener? = null
+    val _bookResultState = MutableLiveData(BookResultState.BEFORE_SEARCH)
+    val bookResultState: LiveData<BookResultState>
+        get() = _bookResultState
+
+    enum class BottomNav { HOME, SEARCH, PROFILE, BOOK, NONE }
+    val _bottomNav = MutableLiveData(BottomNav.HOME)
+    val bottomNav: LiveData<BottomNav>
+        get() = _bottomNav
 
     fun searchBook() {
         naver.searchBook(query.value!!, 10, page.value!!, "sim") { call, response, t ->
@@ -30,44 +38,38 @@ class MainViewModel: BaseViewModel() {
                 if(response.isSuccessful) {
                     val result = response.body()
                     if(result == null) {
-                        plToastListener?.printToast("검색결과가 없습니다.")
+                        this.showToastNullOfSearchResult()
                         return@searchBook
                     }
                     Log.d(this.javaClass.simpleName, "search : $result")
                     results.postValue(result.toString())
                     result.let {
                         if(!it.items.none()) {
-                            if(isInitial.value == true) {
-                                isInitial.postValue(false)
-                                books.postValue(ArrayList(result.items))
-                            } else {
-                                val old = books.value!!
-                                val array = ArrayList<BookResult>()
-                                array.addAll(old)
-                                array.addAll(ArrayList(result.items))
-                                books.postValue(array)
-                            }
+                            val old = books.value!!
+                            val array = ArrayList<BookResult>()
+                            array.addAll(old)
+                            array.addAll(ArrayList(result.items))
+                            books.postValue(array)
                         }
                     }
                 }
             }
         }
     }
-    enum class BottomNav { HOME, SEARCH, PROFILE, BOOK, NONE }
-    val bottomNav = MutableLiveData(BottomNav.HOME)
+
     fun setOnNavigationItemSelectedListener(bottomNavigationView: BottomNavigationView) {
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.home -> {
-                    bottomNav.value = BottomNav.HOME
+                    _bottomNav.value = BottomNav.HOME
                     true
                 }
                 R.id.search -> {
-                    bottomNav.value = BottomNav.SEARCH
+                    _bottomNav.value = BottomNav.SEARCH
                     true
                 }
                 R.id.profile -> {
-                    bottomNav.value = BottomNav.PROFILE
+                    _bottomNav.value = BottomNav.PROFILE
                     true
                 }
                 else -> false
@@ -75,20 +77,31 @@ class MainViewModel: BaseViewModel() {
         }
     }
 
-    fun onSearchButtonClick() {
-        isInitial.postValue(true)
+    fun onSearchButtonClick(query: String) {
+        this._query.postValue(query)
         searchBook()
     }
 
     fun toSearchBack() {
-        bottomNav.value = BottomNav.SEARCH
+        _bottomNav.value = BottomNav.SEARCH
     }
 
-    fun setPLToastListener(plToastListener: PLToastListener) {
-        this.plToastListener = plToastListener
-    }
+    enum class BookResultState { BEFORE_SEARCH, SEARCH_RESULT_NULL, BOOK_INFO_NULL, BOOK_CONTENTS_NULL }
 
-    interface PLToastListener {
-        fun printToast(message: String, term: Int = Toast.LENGTH_SHORT)
+    fun showToastNullOfSearchResult() {
+        this._bookResultState.postValue(BookResultState.SEARCH_RESULT_NULL)
+    }
+    fun showToastNullOfBookInfo() {
+        this._bookResultState.postValue(BookResultState.BOOK_INFO_NULL)
+        this._bottomNav.postValue(BottomNav.SEARCH)
+    }
+    fun showToastNullOfBookContents() {
+        this._bookResultState.postValue(BookResultState.BOOK_CONTENTS_NULL)
+    }
+    fun updateQuery(query: String?) {
+        this._query.postValue(query.toString())
+    }
+    fun updateBottomNavToBook() {
+        this._bottomNav.postValue(BottomNav.BOOK)
     }
 }

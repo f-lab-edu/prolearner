@@ -1,12 +1,10 @@
 package com.litholr.prolearner.ui.book
 
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.litholr.prolearner.R
 import com.litholr.prolearner.databinding.FragmentBookBinding
@@ -25,36 +23,32 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
         initViewPage()
         mainViewModel.selectedBook.observe(this) { bookResult ->
             mainViewModel.naver.getBookCatalog(bookResult) { bresult, catalog, call, res, t ->
-                res?.let {
-                    if(it.isSuccessful) {
-                        if(catalog == null) {
-                            mainViewModel.plToastListener?.printToast("책의 정보를 불러오지 못했습니다.")
-                            mainViewModel.bottomNav.value = MainViewModel.BottomNav.SEARCH
-                            return@getBookCatalog
-                        }
-                        val contentLists = catalog.getBookContentTableList()
-                        if(contentLists == null) {
-                            mainViewModel.plToastListener?.printToast("목차정보가 없습니다.")
-                            return@getBookCatalog
-                        }
-                        Glide.with(binding.root.context).load(bresult.image).into(binding.bookImage)
-                        binding.catalog = catalog
-                        binding.infoAuthor.apply {
-                            title.text = "저자"
-                            text.text = catalog.authorList.joinToString(", ")
-                        }
-                        binding.infoPublisher.apply {
-                            title.text = "출판사"
-                            text.text = catalog.publisher
-                        }
-                        binding.infoResourceFrom.apply {
-                            title.text = "정보제공"
-                            text.text = catalog.contentsSourceMallName ?: "미확인"
-                        }
-                        binding.expandTextView.setOnExpandStateChangeListener { textView, isExpanded -> }
-                        viewPager2Adapter.addFragment(ContentsFragment(contentLists))
-                        viewPager2Adapter.addFragment(GoalsFragment())
+                if(res?.isSuccessful == true) {
+                    if(catalog == null) {
+                        mainViewModel.showToastNullOfBookInfo()
+                        return@getBookCatalog
                     }
+                    val contentLists = catalog.getBookContentTableList()
+                    if(contentLists == null) {
+                        mainViewModel.showToastNullOfBookContents()
+                        return@getBookCatalog
+                    }
+                    binding.catalog = catalog
+                    binding.infoAuthor.apply {
+                        title.text = "저자"
+                        text.text = catalog.authorList.joinToString(", ")
+                    }
+                    binding.infoPublisher.apply {
+                        title.text = "출판사"
+                        text.text = catalog.publisher
+                    }
+                    binding.infoResourceFrom.apply {
+                        title.text = "정보제공"
+                        text.text = catalog.contentsSourceMallName ?: "미확인"
+                    }
+                    binding.expandTextView.setOnExpandStateChangeListener { textView, isExpanded -> }
+                    viewPager2Adapter.addFragment(ContentsFragment(contentLists))
+                    viewPager2Adapter.addFragment(GoalsFragment())
                 }
             }
         }

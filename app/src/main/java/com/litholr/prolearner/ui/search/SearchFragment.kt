@@ -67,7 +67,7 @@ class SearchFragment: BaseFragment<FragmentSearchBinding>() {
             bookViewBinding.description.text = item.description
             bookViewBinding.root.setOnClickListener {
                 mainViewModel.selectedBook.postValue(item)
-                mainViewModel.bottomNav.postValue(MainViewModel.BottomNav.BOOK)
+                mainViewModel.updateBottomNavToBook()
             }
         }
     }

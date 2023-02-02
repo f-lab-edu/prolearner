@@ -44,37 +44,35 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         viewModel.bottomNav.observe(this) {
             binding.bottomNav = it
             when(it) {
-                MainViewModel.BottomNav.HOME -> navController.navigate(R.id.toHomeFragment)
-                MainViewModel.BottomNav.SEARCH -> navController.navigate(R.id.toSearchFragment)
-                MainViewModel.BottomNav.PROFILE -> {}
-                MainViewModel.BottomNav.BOOK -> navController.navigate(R.id.toBookFragment)
+                MainViewModel.BottomNav.HOME ->
+                    navController.navigate(R.id.toHomeFragment)
+                MainViewModel.BottomNav.SEARCH ->
+                    navController.navigate(R.id.toSearchFragment)
+                MainViewModel.BottomNav.BOOK ->
+                    navController.navigate(R.id.toBookFragment)
+                else -> {}
+            }
+        }
+        viewModel.bookResultState.observe(this) {
+            when(it) {
+                MainViewModel.BookResultState.BOOK_INFO_NULL ->
+                    PLToast.makeToast(this, "책의 정보를 불러오지 못했습니다.")
+                MainViewModel.BookResultState.SEARCH_RESULT_NULL ->
+                    PLToast.makeToast(this, "검색결과가 없습니다.")
+                MainViewModel.BookResultState.BOOK_CONTENTS_NULL ->
+                    PLToast.makeToast(this, "목차정보가 없습니다.")
                 else -> {}
             }
         }
         viewModel.query.observe(this) {
-            Log.d(this.javaClass.simpleName, "query : $it")
+            viewModel.searchBook()
         }
     }
 
     private fun setListeners() {
-        binding.search.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s!!.isEmpty()) {
-                    Log.d(this.javaClass.simpleName, "s : $s")
-                    viewModel.query.postValue(s.toString())
-                }
-            }
-        })
         binding.searchButton.setOnClickListener {
-            viewModel.onSearchButtonClick()
+            viewModel.onSearchButtonClick(binding.search.toString())
         }
-        viewModel.setPLToastListener(object: MainViewModel.PLToastListener {
-            override fun printToast(message: String, term: Int) {
-                PLToast.makeToast(this@MainActivity, message, term)
-            }
-        })
         binding.backButtonOfBook.setOnClickListener {
             viewModel.toSearchBack()
         }
