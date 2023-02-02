@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.ejjang2030.bookcontentparser.api.naver.BookCatalog"/>
+        <variable
+            name="catalog"
+            type="BookCatalog" />
+    </data>
     <FrameLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -42,6 +49,7 @@
                     android:gravity="center_horizontal"
                     android:layout_gravity="center_horizontal"
                     tools:text="자바의 신 vol.1 기초"
+                    android:text="@{catalog.title}"
                     android:textColor="#26282D"
                     android:paddingHorizontal="20dp"
                     android:textStyle="bold"
@@ -58,6 +66,8 @@
                     android:paddingHorizontal="20dp"
                     tools:text="자바의 신 vol.1 기초"
                     android:textColor="#26282D"
+                    android:visibility="@{catalog.subtitle == null? View.GONE : View.VISIBLE}"
+                    android:text="@{catalog.subtitle}"
                     android:textStyle="normal"
                     android:layout_marginTop="5dp"
                     android:id="@+id/book_subtitle"/>
@@ -122,6 +132,7 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginVertical="20dp"
                     android:elevation="5dp"
+                    android:text="@{catalog.description}"
                     android:id="@+id/expand_text_view"
                     android:background="@drawable/bg_book_description"
                     app:maxCollapsedLines="4"
@@ -131,6 +142,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/noto_sans_kr_regular"
                         android:textSize="13sp"
+                        android:text="@{catalog.description}"
                         android:textColor="#D8000000"
                         tools:text="대통령이 임시회의 집회를 요구할 때에는 기간과 집회요구의 이유를 명시하여야 한다. 대통령의 임기는 5년으로 하며, 중임할 수 없다. 국가는 재해를 예방하고 그 위험으..."
                         android:textAlignment="gravity"
