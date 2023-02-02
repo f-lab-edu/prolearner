@@ -28,22 +28,26 @@ class MainViewModel: BaseViewModel() {
         naver.searchBook(query.value!!, 10, page.value!!, "sim") { call, response, t ->
             if(response != null) {
                 if(response.isSuccessful) {
-                    var result = response.body()
+                    val result = response.body()
+                    if(result == null) {
+                        plToastListener?.printToast("검색결과가 없습니다.")
+                        return@searchBook
+                    }
                     Log.d(this.javaClass.simpleName, "search : $result")
                     results.postValue(result.toString())
-                    if((result != null) && (result.items.size != 0)) {
-                        if(isInitial.value == true) {
-                            isInitial.postValue(false)
-                            books.postValue(ArrayList(result.items))
-                        } else {
-                            val old = books.value!!
-                            val array = ArrayList<BookResult>()
-                            array.addAll(old)
-                            array.addAll(ArrayList(result.items))
-                            books.postValue(array)
+                    result.let {
+                        if(!it.items.none()) {
+                            if(isInitial.value == true) {
+                                isInitial.postValue(false)
+                                books.postValue(ArrayList(result.items))
+                            } else {
+                                val old = books.value!!
+                                val array = ArrayList<BookResult>()
+                                array.addAll(old)
+                                array.addAll(ArrayList(result.items))
+                                books.postValue(array)
+                            }
                         }
-                    } else {
-                        plToastListener?.printToast("검색결과가 없습니다.")
                     }
                 }
             }
