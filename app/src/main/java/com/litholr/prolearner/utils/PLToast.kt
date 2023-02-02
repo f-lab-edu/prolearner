@@ -9,7 +9,7 @@ import com.litholr.prolearner.R
 import com.litholr.prolearner.databinding.LayoutToastBinding
 
 object PLToast {
-    fun makeToast(context: Context, message: CharSequence, duration: Int) {
+    fun makeToast(context: Context, message: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
         context.mainLooper.thread.also {
             val toast = Toast(context)
             toast.duration = duration
