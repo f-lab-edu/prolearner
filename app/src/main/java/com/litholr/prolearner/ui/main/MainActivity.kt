@@ -71,7 +71,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     private fun setListeners() {
         binding.searchButton.setOnClickListener {
-            viewModel.onSearchButtonClick(binding.search.toString())
+            viewModel.onSearchButtonClick(binding.search.text.toString())
         }
         binding.backButtonOfBook.setOnClickListener {
             viewModel.toSearchBack()

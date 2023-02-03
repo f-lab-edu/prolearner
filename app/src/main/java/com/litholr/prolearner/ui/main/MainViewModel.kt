@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import api.naver.BookResult
+import api.naver.BookSearchResult
 import api.naver.NaverSearching
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.litholr.prolearner.R
@@ -43,14 +44,12 @@ class MainViewModel: BaseViewModel() {
                     }
                     Log.d(this.javaClass.simpleName, "search : $result")
                     results.postValue(result.toString())
-                    result.let {
-                        if(!it.items.none()) {
-                            val old = books.value!!
-                            val array = ArrayList<BookResult>()
-                            array.addAll(old)
-                            array.addAll(ArrayList(result.items))
-                            books.postValue(array)
-                        }
+                    result.let { bookSearchResult ->
+                        Log.d(this.javaClass.simpleName, "$bookSearchResult")
+                        val array = ArrayList<BookResult>()
+                        books.value?.let { array.addAll(it) }
+                        array.addAll(ArrayList(bookSearchResult.items))
+                        books.postValue(array)
                     }
                 }
             }
