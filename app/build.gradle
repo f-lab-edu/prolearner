@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.litholr.prolearner"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
@@ -92,4 +92,6 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'com.ms-square:expandableTextView:0.1.4'
     implementation 'androidx.appcompat:appcompat:1.7.0-alpha01'
+    implementation 'com.github.pwittchen:infinitescroll:0.0.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 }

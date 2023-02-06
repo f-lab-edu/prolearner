@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener
 import com.litholr.prolearner.R
 import com.litholr.prolearner.databinding.ActivityMainBinding
 import com.litholr.prolearner.ui.base.BaseActivity

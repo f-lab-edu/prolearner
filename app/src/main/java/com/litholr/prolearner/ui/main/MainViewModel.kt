@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import api.naver.BookResult
 import api.naver.BookSearchResult
 import api.naver.NaverSearching
+import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.litholr.prolearner.R
 import com.litholr.prolearner.ui.base.BaseViewModel
@@ -15,13 +16,23 @@ import kotlin.collections.ArrayList
 
 @HiltViewModel
 class MainViewModel: BaseViewModel() {
-    val _query = MutableLiveData("")
+    var naver = NaverSearching(SecretId.NAVER_CLIENT_ID, SecretId.NAVER_CLIENT_ID_SECRET)
+    private val searchResultItemCount = 10
+
+    private val _query = MutableLiveData("")
     val query: LiveData<String?>
         get() = _query
-    var page = MutableLiveData(1)
-    var naver = NaverSearching(SecretId.NAVER_CLIENT_ID, SecretId.NAVER_CLIENT_ID_SECRET)
+
+    private val _page = MutableLiveData(1)
+    val page: LiveData<Int>
+        get() = _page
+
+    private val _books = MutableLiveData<ArrayList<BookResult>>(ArrayList())
+    val books: MutableLiveData<ArrayList<BookResult>>
+        get() = _books
+
     var results = MutableLiveData("")
-    var books = MutableLiveData<ArrayList<BookResult>>(ArrayList())
+
     var selectedBook = MutableLiveData<BookResult>()
 
     val _bookResultState = MutableLiveData(BookResultState.BEFORE_SEARCH)
@@ -77,7 +88,7 @@ class MainViewModel: BaseViewModel() {
     }
 
     fun onSearchButtonClick(query: String) {
-        this._query.postValue(query)
+        updateQuery(query)
         searchBook()
     }
 
@@ -98,9 +109,18 @@ class MainViewModel: BaseViewModel() {
         this._bookResultState.postValue(BookResultState.BOOK_CONTENTS_NULL)
     }
     fun updateQuery(query: String?) {
+        this._books.value!!.clear()
         this._query.postValue(query.toString())
+        this._page.postValue(1)
     }
     fun updateBottomNavToBook() {
         this._bottomNav.postValue(BottomNav.BOOK)
+    }
+    fun updateScrollPage() {
+        this._page.postValue(this._page.value!!.plus(1))
+        searchBook()
+    }
+    fun getSearchResultItemCount(): Int {
+        return this.searchResultItemCount
     }
 }
