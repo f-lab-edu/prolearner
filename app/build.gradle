@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.litholr.prolearner"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
@@ -32,11 +32,9 @@ android {
         jvmTarget = '1.8'
     }
     namespace 'com.litholr.prolearner'
-    viewBinding {
-        enabled true
-    }
     buildFeatures {
         dataBinding true
+        viewBinding true
         compose true
     }
     composeOptions {
@@ -78,7 +76,7 @@ dependencies {
     // Jetpack Compose Integration
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
-    implementation 'com.github.ejjang2030:BookContentParser:1.0.11'
+    implementation 'com.github.ejjang2030:BookContentParser:1.0.18'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
@@ -97,4 +95,13 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
     implementation "androidx.room:room-paging:$room_version"
+    
+    // for ui library
+    implementation "androidx.palette:palette-ktx:1.0.0"
+
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.ms-square:expandableTextView:0.1.4'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha01'
+    implementation 'com.github.pwittchen:infinitescroll:0.0.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 }

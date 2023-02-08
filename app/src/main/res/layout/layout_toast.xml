@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -7,7 +8,15 @@
     <TextView
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="10dp"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
+        android:textStyle="normal"
+        tools:text="테스트입니다."
+        android:textSize="18sp"
+        android:paddingVertical="3dp"
+        android:paddingHorizontal="9dp"
+        android:includeFontPadding="false"
+        android:fontFamily="@font/noto_sans_kr_medium"
         android:layout_height="wrap_content"
         android:id="@+id/message"/>
 </LinearLayout>

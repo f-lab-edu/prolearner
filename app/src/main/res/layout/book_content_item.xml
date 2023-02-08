@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:elevation="1dp"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/content_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="16dp"
+        android:elevation="12dp"
+        android:ellipsize="end"
+        android:maxWidth="300dp"
+        android:maxLines="2"
+        android:fontFamily="@font/noto_sans_kr_regular"
+        android:textColor="#26282D"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        tools:text="자바의 신 자바의 신 자바의 신자바의 신 자바의 신 자바의 신자바의 신 자바의 신 자바의 신자바의 신 자바의 신 자바의 신자바의 신 자바의 신 자바의 신" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#41D1D1D1"
+        android:layout_alignBottom="@id/content_title"
+        android:layout_alignParentBottom="true"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_read"
+        android:layout_marginEnd="12dp"
+        android:clickable="true"
+        android:id="@+id/check"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:focusable="true" />
+
+</RelativeLayout>
