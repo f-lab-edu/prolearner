@@ -21,7 +21,10 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.litholr.prolearner.R
+import com.litholr.prolearner.data.local.AppDatabase
 import com.litholr.prolearner.databinding.ActivityMainBinding
 import com.litholr.prolearner.ui.base.BaseActivity
 import com.litholr.prolearner.utils.PLToast
@@ -33,19 +36,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         get() = R.layout.activity_main
     override val viewModel: MainViewModel by viewModels()
 
-//    lateinit var navHostFragment: NavHostFragment
-//    lateinit var navController: NavController
-
-    override fun onCreateBegin(savedInstanceState: Bundle?) {
-//        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-//        navController = navHostFragment.navController
-//        binding.bottomNavigationBar.setupWithNavController(navController)
-//        setListeners()
-        val logo = ImageView(this)
-        logo.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.appbar_logo))
-        binding.appbar.addView(logo)
+    val db: RoomDatabase by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "localdb"
+        ).build()
     }
 
-    private fun setListeners() {
+    override fun onCreateBegin(savedInstanceState: Bundle?) {
     }
 }

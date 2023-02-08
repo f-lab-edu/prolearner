@@ -1,6 +1,9 @@
 package com.litholr.prolearner.ui.main
 
 import androidx.lifecycle.LiveData
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.litholr.prolearner.data.local.AppDatabase
 import com.litholr.prolearner.data.local.LocalDbRepository
 import com.litholr.prolearner.data.local.entity.ContentInfo
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
@@ -12,6 +15,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val localDbRepository: LocalDbRepository
 ): BaseViewModel() {
+
     fun deleteContent(contentId: Int) {
         localDbRepository.deleteContent(contentId)
     }
