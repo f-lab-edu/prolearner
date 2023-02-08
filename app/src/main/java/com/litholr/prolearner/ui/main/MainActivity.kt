@@ -47,7 +47,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         ).build()
     }
 
-    override fun onCreateBegin(savedInstanceState: Bundle?) {
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
@@ -58,13 +57,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         setObservables()
     }
 
-    private fun setNavigation() {
+    fun setNavigation() {
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         binding.bottomNavigationBar.setupWithNavController(navController)
     }
 
-    private fun setObservables() {
+    fun setObservables() {
         viewModel.page.observe(this) {
             viewModel.searchBook()
         }
@@ -96,7 +95,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         }
     }
 
-    private fun setListeners() {
+    fun setListeners() {
         binding.searchButton.setOnClickListener {
             viewModel.onSearchButtonClick(binding.search.text.toString())
         }
