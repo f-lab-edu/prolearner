@@ -9,6 +9,6 @@ import com.litholr.prolearner.data.local.entity.SavedBookInfo
 
 @Database(entities = [SavedBookInfo::class, ContentInfo::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun savedBookInfoDao(): SavedBookInfoDao
-    abstract fun contentInfoDao(): ContentInfoDao
+//    abstract fun savedBookInfoDao(): SavedBookInfoDao
+//    abstract fun contentInfoDao(): ContentInfoDao
 }

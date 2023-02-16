@@ -40,12 +40,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         get() = R.layout.activity_main
     override val viewModel: MainViewModel by viewModels()
 
-    val db: RoomDatabase by lazy {
-        Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "localdb"
-        ).build()
-    }
+//    val db: RoomDatabase by lazy {
+//        Room.databaseBuilder(
+//        Room.databaseBuilder(
+//            applicationContext,
+//            AppDatabase::class.java, "localdb"
+//        ).build()
+//    }
 
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
