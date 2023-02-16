@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import api.naver.BookResult
 import com.bumptech.glide.Glide
-import com.github.pwittchen.infinitescroll.library.InfiniteScrollListener
 import com.litholr.prolearner.R
 import com.litholr.prolearner.databinding.CardviewBookinfoBinding
 import com.litholr.prolearner.databinding.FragmentSearchBinding
 import com.litholr.prolearner.ui.base.BaseFragment
 import com.litholr.prolearner.ui.main.MainViewModel
+import com.litholr.prolearner.utils.PLToast
 
 class SearchFragment: BaseFragment<FragmentSearchBinding>() {
     override val layoutId: Int
@@ -26,37 +26,37 @@ class SearchFragment: BaseFragment<FragmentSearchBinding>() {
 
     override fun onCreateBegin(savedInstanceState: Bundle?) {
         binding.bookList.apply {
-            adapter = BookAdapter(mainViewModel.books.value!!)
+            adapter = BookAdapter()
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             addOnScrollListener(object: RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     if(!recyclerView.canScrollVertically(1)) {
-                        showLoading()
-                        mainViewModel.updateScrollPage()
-                        recyclerView.scrollToPosition((layoutManager as LinearLayoutManager).findLastVisibleItemPosition())
+                        Log.d(this.javaClass.simpleName, "page : ${mainViewModel.page.value}")
+                        PLToast.makeToast(requireContext(), "page : ${mainViewModel.page.value}")
+                        loadData()
+//                        recyclerView.scrollToPosition((layoutManager as LinearLayoutManager).findLastVisibleItemPosition())
                     }
                 }
             })
         }
+        mainViewModel.query.observe(this) {
+            (binding.bookList.adapter as? BookAdapter)?.clear()
+        }
         mainViewModel.books.observe(this) {
-            binding.bookList.adapter = BookAdapter(mainViewModel.books.value!!)
+            (binding.bookList.adapter as? BookAdapter)?.addBooks(it)
         }
     }
 
-    private fun showLoading() {
+    private fun loadData() {
         object: AsyncTask<Unit, Unit, Unit>() {
             override fun onPreExecute() {
                 binding.progressBar.visibility = View.VISIBLE
             }
 
             override fun doInBackground(vararg p0: Unit?) {
-                try {
-                    Thread.sleep(1500)
-                } catch(e: InterruptedException) {
-                    Log.e(this.javaClass.simpleName, e.message.toString())
-                }
+                mainViewModel.updateScrollPage()
             }
 
             override fun onPostExecute(result: Unit?) {
@@ -65,7 +65,9 @@ class SearchFragment: BaseFragment<FragmentSearchBinding>() {
         }.execute()
     }
 
-    inner class BookAdapter(val array: ArrayList<BookResult> = ArrayList()) : RecyclerView.Adapter<BookViewHolder>() {
+    inner class BookAdapter() : RecyclerView.Adapter<BookViewHolder>() {
+        private val array: MutableList<BookResult> = mutableListOf()
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
             return BookViewHolder(CardviewBookinfoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
@@ -73,8 +75,19 @@ class SearchFragment: BaseFragment<FragmentSearchBinding>() {
             holder.bindItem(array[position])
         }
         override fun getItemCount(): Int = array.size
-        fun getItems(): ArrayList<BookResult> {
+        fun getItems(): List<BookResult> {
             return array
+        }
+
+        fun addBooks(list: List<BookResult>) {
+            val arrayLastIndex = array.size - 1
+            array.addAll(list)
+            notifyItemRangeInserted(arrayLastIndex, list.size)
+        }
+
+        fun clear() {
+            array.clear()
+            notifyDataSetChanged()
         }
     }
     inner class BookViewHolder(private val bookViewBinding: CardviewBookinfoBinding): RecyclerView.ViewHolder(bookViewBinding.root) {

@@ -1,9 +1,5 @@
 package com.litholr.prolearner.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.litholr.prolearner.data.local.AppDatabase
 import com.litholr.prolearner.data.local.LocalDbRepository
 import com.litholr.prolearner.data.local.entity.ContentInfo
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
@@ -11,7 +7,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import api.naver.BookResult
-import api.naver.BookSearchResult
 import api.naver.NaverSearching
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.litholr.prolearner.R
@@ -23,7 +18,7 @@ import kotlin.collections.ArrayList
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val localDbRepository: LocalDbRepository
+//    private val localDbRepository: LocalDbRepository
 ): BaseViewModel() {
     var naver = NaverSearching(SecretId.NAVER_CLIENT_ID, SecretId.NAVER_CLIENT_ID_SECRET)
     private val searchResultItemCount = 10
@@ -62,14 +57,15 @@ class MainViewModel @Inject constructor(
                         this.showToastNullOfSearchResult()
                         return@searchBook
                     }
-                    Log.d(this.javaClass.simpleName, "search : $result")
                     results.postValue(result.toString())
+                   // Log.d(this.javaClass.simpleName, "page : ${page.value}")
+                    //Log.d(this.javaClass.simpleName, "result : ${result.items.map { it.title }}")
                     result.let { bookSearchResult ->
-                        Log.d(this.javaClass.simpleName, "$bookSearchResult")
-                        val array = ArrayList<BookResult>()
-                        books.value?.let { array.addAll(it) }
-                        array.addAll(ArrayList(bookSearchResult.items))
-                        books.postValue(array)
+//                        Log.d(this.javaClass.simpleName, "$bookSearchResult")
+//                        val array = ArrayList<BookResult>()
+//                        books.value?.let { array.addAll(it) }
+//                        array.addAll(ArrayList(bookSearchResult.items))
+                        books.postValue(ArrayList(bookSearchResult.items))
                     }
                 }
             }
@@ -133,41 +129,41 @@ class MainViewModel @Inject constructor(
         return this.searchResultItemCount
     }
     
-    // for room db
-    fun deleteContent(contentId: Int) {
-        localDbRepository.deleteContent(contentId)
-    }
-
-    fun getContentList(isbn: String) {
-        localDbRepository.getContentList(isbn)
-    }
-
-    fun insertContents(vararg contentInfo: ContentInfo) {
-        localDbRepository.insertContents(*contentInfo)
-    }
-
-    fun getSavedBookInfoAll(): LiveData<List<SavedBookInfo>> {
-        return localDbRepository.getSavedBookInfoAll()
-    }
-
-    fun insertSavedBookInfo(vararg savedBookInfo: SavedBookInfo) {
-        localDbRepository.insertSavedBookInfo(*savedBookInfo)
-    }
-
-    fun modifyContentPosition(
-        isbn: String,
-        contentId: Int,
-        parentId: Int,
-        orderNumber: Int
-    ) {
-        localDbRepository.modifyContentPosition(isbn, contentId, parentId, orderNumber)
-    }
-
-    fun modifyContentTitle(
-        isbn: String,
-        contentId: Int,
-        contentTitle: String
-    ) {
-        localDbRepository.modifyContentTitle(isbn, contentId, contentTitle)
-    }
+//    // for room db
+//    fun deleteContent(contentId: Int) {
+//        localDbRepository.deleteContent(contentId)
+//    }
+//
+//    fun getContentList(isbn: String) {
+//        localDbRepository.getContentList(isbn)
+//    }
+//
+//    fun insertContents(vararg contentInfo: ContentInfo) {
+//        localDbRepository.insertContents(*contentInfo)
+//    }
+//
+//    fun getSavedBookInfoAll(): LiveData<List<SavedBookInfo>> {
+//        return localDbRepository.getSavedBookInfoAll()
+//    }
+//
+//    fun insertSavedBookInfo(vararg savedBookInfo: SavedBookInfo) {
+//        localDbRepository.insertSavedBookInfo(*savedBookInfo)
+//    }
+//
+//    fun modifyContentPosition(
+//        isbn: String,
+//        contentId: Int,
+//        parentId: Int,
+//        orderNumber: Int
+//    ) {
+//        localDbRepository.modifyContentPosition(isbn, contentId, parentId, orderNumber)
+//    }
+//
+//    fun modifyContentTitle(
+//        isbn: String,
+//        contentId: Int,
+//        contentTitle: String
+//    ) {
+//        localDbRepository.modifyContentTitle(isbn, contentId, contentTitle)
+//    }
 }
