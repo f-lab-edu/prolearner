@@ -7,10 +7,12 @@
         android:layout_height="match_parent"
         android:background="@color/base_background"
         tools:context=".ui.home.HomeFragment">
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/saved_book_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
     </com.litholr.prolearner.ui.base.BaseLayout>
 </layout>
