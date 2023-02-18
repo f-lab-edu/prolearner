@@ -1,25 +1,34 @@
 package com.litholr.prolearner.ui.main
 
-import com.litholr.prolearner.data.local.LocalDbRepository
-import com.litholr.prolearner.data.local.entity.ContentInfo
+import android.content.Context
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
+import androidx.room.Room
 import api.naver.BookResult
 import api.naver.NaverSearching
+import com.ejjang2030.bookcontentparser.api.naver.BookCatalog
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
 import com.litholr.prolearner.R
+import com.litholr.prolearner.data.local.AppDatabase
+import com.litholr.prolearner.data.local.typeconverter.BookCatalogConverter
+import com.litholr.prolearner.data.local.typeconverter.BookResultConverter
 import com.litholr.prolearner.ui.base.BaseViewModel
+import com.litholr.prolearner.utils.PLToast
 import com.litholr.prolearner.utils.SecretId
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject  
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.collections.ArrayList
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-//    private val localDbRepository: LocalDbRepository
-): BaseViewModel() {
+class MainViewModel : BaseViewModel() {
+    var db: AppDatabase? = null
+
     var naver = NaverSearching(SecretId.NAVER_CLIENT_ID, SecretId.NAVER_CLIENT_ID_SECRET)
     private val searchResultItemCount = 10
 
@@ -35,9 +44,20 @@ class MainViewModel @Inject constructor(
     val books: MutableLiveData<ArrayList<BookResult>>
         get() = _books
 
+    private val _checkedContents = MutableLiveData<MutableMap<Int, Pair<String, Boolean>>>()
+    val checkedContents: LiveData<MutableMap<Int, Pair<String, Boolean>>>
+        get() = _checkedContents
+
     var results = MutableLiveData("")
 
-    var selectedBook = MutableLiveData<BookResult>()
+    private val _selectedBook = MutableLiveData<BookResult>()
+    val selectedBook: LiveData<BookResult>
+        get() = _selectedBook
+
+    private val _selectedBookCatalog = MutableLiveData<BookCatalog>()
+    val selectedBookCatalog: MutableLiveData<BookCatalog>
+        get() = _selectedBookCatalog
+
 
     val _bookResultState = MutableLiveData(BookResultState.BEFORE_SEARCH)
     val bookResultState: LiveData<BookResultState>
@@ -47,6 +67,22 @@ class MainViewModel @Inject constructor(
     val _bottomNav = MutableLiveData(BottomNav.HOME)
     val bottomNav: LiveData<BottomNav>
         get() = _bottomNav
+
+    var savedBookInfo: SavedBookInfo? = null
+
+    var _isSavedBookPage = MutableLiveData<Boolean>()
+    val isSavedBookPage: LiveData<Boolean>
+        get() = _isSavedBookPage
+
+    fun initDB(context: Context) {
+        val gson = Gson()
+        db = Room
+            .databaseBuilder(context, AppDatabase::class.java, "prolearner_app.db")
+            .addTypeConverter(BookCatalogConverter(gson))
+            .addTypeConverter(BookResultConverter(gson))
+            .fallbackToDestructiveMigration()
+            .build()
+    }
 
     fun searchBook() {
         naver.searchBook(query.value!!, 10, page.value!!, "sim") { call, response, t ->
@@ -70,6 +106,23 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun saveBook(context: Context) {
+        if(savedBookInfo != null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                insertSavedBookInfo(savedBookInfo!!)
+            }
+            PLToast.makeToast(context, "책이 저장되었습니다.")
+            this._bottomNav.postValue(BottomNav.HOME)
+        }
+    }
+
+    fun updateCheckedContent(index: Int, isChecked: Boolean) {
+        val curr: Pair<String, Boolean>? = _checkedContents.value?.get(index)
+        val contentTitle = curr?.first ?: ""
+        val new: Pair<String, Boolean> = Pair(contentTitle, isChecked)
+        _checkedContents.value?.put(index, new)
     }
 
     fun setOnNavigationItemSelectedListener(bottomNavigationView: BottomNavigationView) {
@@ -97,8 +150,12 @@ class MainViewModel @Inject constructor(
         searchBook()
     }
 
-    fun toSearchBack() {
-        _bottomNav.value = BottomNav.SEARCH
+    fun toBack() {
+        if(_isSavedBookPage.value!!) {
+            _bottomNav.value = BottomNav.HOME
+        } else {
+            _bottomNav.value = BottomNav.SEARCH
+        }
     }
 
     enum class BookResultState { BEFORE_SEARCH, SEARCH_RESULT_NULL, BOOK_INFO_NULL, BOOK_CONTENTS_NULL }
@@ -118,7 +175,9 @@ class MainViewModel @Inject constructor(
         this._query.postValue(query.toString())
         this._page.postValue(1)
     }
-    fun updateBottomNavToBook() {
+    fun updateBottomNavToBook(bookResult: BookResult, isFirst: Boolean = true) {
+        this._isSavedBookPage.value = !isFirst
+        this._selectedBook.postValue(bookResult)
         this._bottomNav.postValue(BottomNav.BOOK)
     }
     fun updateScrollPage() {
@@ -129,41 +188,29 @@ class MainViewModel @Inject constructor(
         return this.searchResultItemCount
     }
     
-//    // for room db
-//    fun deleteContent(contentId: Int) {
-//        localDbRepository.deleteContent(contentId)
-//    }
-//
-//    fun getContentList(isbn: String) {
-//        localDbRepository.getContentList(isbn)
-//    }
-//
-//    fun insertContents(vararg contentInfo: ContentInfo) {
-//        localDbRepository.insertContents(*contentInfo)
-//    }
-//
-//    fun getSavedBookInfoAll(): LiveData<List<SavedBookInfo>> {
-//        return localDbRepository.getSavedBookInfoAll()
-//    }
-//
-//    fun insertSavedBookInfo(vararg savedBookInfo: SavedBookInfo) {
-//        localDbRepository.insertSavedBookInfo(*savedBookInfo)
-//    }
-//
-//    fun modifyContentPosition(
-//        isbn: String,
-//        contentId: Int,
-//        parentId: Int,
-//        orderNumber: Int
-//    ) {
-//        localDbRepository.modifyContentPosition(isbn, contentId, parentId, orderNumber)
-//    }
-//
-//    fun modifyContentTitle(
-//        isbn: String,
-//        contentId: Int,
-//        contentTitle: String
-//    ) {
-//        localDbRepository.modifyContentTitle(isbn, contentId, contentTitle)
-//    }
+    // for room db
+    // SavedBookInfo
+    fun getSavedBookInfos(): LiveData<List<SavedBookInfo>> {
+        return liveData {
+            val data = withContext(Dispatchers.IO) {
+                db!!.savedBookInfoDao().getSavedBookInfoAll()
+            }
+            emit(data)
+        }
+    }
+    suspend fun isBookExisted(isbn: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            db!!.savedBookInfoDao().isBookExisted(isbn)
+        }
+    }
+    suspend fun insertSavedBookInfo(savedBookInfo: SavedBookInfo) {
+        return withContext(Dispatchers.IO) {
+            db!!.savedBookInfoDao().insertSavedBookInfo(savedBookInfo)
+        }
+    }
+    suspend fun getSavedBookInfoByISBN(isbn: String): SavedBookInfo {
+        return withContext(Dispatchers.IO) {
+            db!!.savedBookInfoDao().getSavedBookInfoByIsbn(isbn)
+        }
+    }
 }

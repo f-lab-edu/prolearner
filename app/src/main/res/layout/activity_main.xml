@@ -7,6 +7,9 @@
             name="bottomNav"
             type="BottomNav" />
         <variable
+            name="isSavedBookPage"
+            type="Boolean" />
+        <variable
             name="mainViewModel"
             type="com.litholr.prolearner.ui.main.MainViewModel"/>
     </data>
@@ -108,6 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_save"
+                    android:visibility="@{isSavedBookPage ? View.GONE : View.VISIBLE}"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="#00000000"

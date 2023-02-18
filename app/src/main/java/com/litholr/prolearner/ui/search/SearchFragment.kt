@@ -34,7 +34,6 @@ class SearchFragment: BaseFragment<FragmentSearchBinding>() {
                     super.onScrolled(recyclerView, dx, dy)
                     if(!recyclerView.canScrollVertically(1)) {
                         Log.d(this.javaClass.simpleName, "page : ${mainViewModel.page.value}")
-                        PLToast.makeToast(requireContext(), "page : ${mainViewModel.page.value}")
                         loadData()
 //                        recyclerView.scrollToPosition((layoutManager as LinearLayoutManager).findLastVisibleItemPosition())
                     }
@@ -98,8 +97,7 @@ class SearchFragment: BaseFragment<FragmentSearchBinding>() {
             bookViewBinding.publisher.text = item.publisher
             bookViewBinding.description.text = item.description
             bookViewBinding.root.setOnClickListener {
-                mainViewModel.selectedBook.postValue(item)
-                mainViewModel.updateBottomNavToBook()
+                mainViewModel.updateBottomNavToBook(item)
             }
         }
     }

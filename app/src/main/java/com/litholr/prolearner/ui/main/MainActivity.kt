@@ -1,33 +1,12 @@
 package com.litholr.prolearner.ui.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.ImageView
-import android.widget.Toast
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.litholr.prolearner.R
-import com.litholr.prolearner.data.local.AppDatabase
 import com.litholr.prolearner.databinding.ActivityMainBinding
 import com.litholr.prolearner.ui.base.BaseActivity
 import com.litholr.prolearner.utils.PLToast
@@ -40,18 +19,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         get() = R.layout.activity_main
     override val viewModel: MainViewModel by viewModels()
 
-//    val db: RoomDatabase by lazy {
-//        Room.databaseBuilder(
-//        Room.databaseBuilder(
-//            applicationContext,
-//            AppDatabase::class.java, "localdb"
-//        ).build()
-//    }
-
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
 
     override fun onCreateBegin(savedInstanceState: Bundle?) {
+        viewModel.initDB(applicationContext)
         setNavigation()
         viewModel.setOnNavigationItemSelectedListener(binding.bottomNavigationBar)
         setListeners()
@@ -71,12 +43,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         viewModel.bottomNav.observe(this) {
             binding.bottomNav = it
             when(it) {
-                MainViewModel.BottomNav.HOME ->
+                MainViewModel.BottomNav.HOME -> {
+                    binding.bottomNavigationBar.visibility = View.VISIBLE
                     navController.navigate(R.id.toHomeFragment)
-                MainViewModel.BottomNav.SEARCH ->
+                }
+                MainViewModel.BottomNav.SEARCH -> {
+                    binding.bottomNavigationBar.visibility = View.VISIBLE
                     navController.navigate(R.id.toSearchFragment)
-                MainViewModel.BottomNav.BOOK ->
+                }
+                MainViewModel.BottomNav.BOOK -> {
                     navController.navigate(R.id.toBookFragment)
+                    binding.bottomNavigationBar.visibility = View.GONE
+                }
                 else -> {}
             }
         }
@@ -94,6 +72,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         viewModel.query.observe(this) {
             viewModel.searchBook()
         }
+        viewModel.isSavedBookPage.observe(this) {
+            binding.isSavedBookPage = it
+        }
     }
 
     fun setListeners() {
@@ -101,7 +82,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             viewModel.onSearchButtonClick(binding.search.text.toString())
         }
         binding.backButtonOfBook.setOnClickListener {
-            viewModel.toSearchBack()
+            viewModel.toBack()
+        }
+        binding.save.setOnClickListener {
+            viewModel.saveBook(this)
         }
     }
 }
