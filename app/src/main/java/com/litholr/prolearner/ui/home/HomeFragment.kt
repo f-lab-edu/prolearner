@@ -1,6 +1,7 @@
 package com.litholr.prolearner.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -60,6 +61,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 savedBookViewBinding.publisher.text = it.publisher
                 savedBookViewBinding.root.setOnClickListener {
                     mainViewModel.updateBottomNavToBook(item.bookResult, false)
+                }
+                CoroutineScope(Dispatchers.Main).launch {
+                    val contentInfoList = mainViewModel.getContentInfoListByISBN(it.isbn)
+                    val contentListlength = contentInfoList.size.toDouble()
+                    val checkedListlength = contentInfoList.asSequence().count { it.isChecked }.toDouble()
+                    Log.d(this.javaClass.simpleName, "${checkedListlength}/${contentListlength} = ${checkedListlength / contentListlength}")
+                    savedBookViewBinding.progress.apply {
+                        setCornerRadius(10f)
+                        setProgressPercentage((checkedListlength / contentListlength) * 100, false)
+                    }
                 }
             }
         }
