@@ -2,6 +2,7 @@ package com.litholr.prolearner.ui.book
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ejjang2030.bookcontentparser.api.naver.BookCatalog
 import com.litholr.prolearner.R
+import com.litholr.prolearner.data.local.entity.ContentInfo
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
 import com.litholr.prolearner.databinding.BookContentItemBinding
 import com.litholr.prolearner.databinding.FragmentBookBinding
@@ -32,8 +34,9 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
             GlobalScope.launch(Dispatchers.Default) {
                 if(mainViewModel.isBookExisted(bookResult.isbn)) {
                     val savedBookInfo = mainViewModel.getSavedBookInfoByISBN(bookResult.isbn)
+                    val contentInfoList = mainViewModel.getContentInfoListByISBN(bookResult.isbn)
                     savedBookInfo.catalog?.let {
-                        initUI(it, false)
+                        initUI(it, false, contentInfoList)
                     }
                 } else {
                     mainViewModel.naver.getBookCatalog(bookResult) { bresult, catalog, call, res, t ->
@@ -58,7 +61,7 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
         }
     }
 
-    private fun initUI(catalog: BookCatalog, isFirst: Boolean = true) {
+    private fun initUI(catalog: BookCatalog, isFirst: Boolean = true, contentInfoList: List<ContentInfo>? = null) {
         CoroutineScope(Dispatchers.Main).launch {
             val contentLists = catalog.getBookContentTableList()
             if(contentLists == null) {
@@ -80,12 +83,12 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
             }
             binding.expandTextView.setOnExpandStateChangeListener { textView, isExpanded -> }
             val bookAdapter: BookContentAdapter
-            if(isFirst) {
+            if(isFirst && contentInfoList == null) {
                 binding.datePicker.visibility = View.GONE
-                bookAdapter = BookContentAdapter(contentLists)
+                bookAdapter = BookContentAdapter(contentLists, isbnInAdapter = catalog.isbn)
             } else {
                 binding.datePicker.visibility = View.VISIBLE
-                bookAdapter = BookContentAdapter(contentLists, false)
+                bookAdapter = BookContentAdapter(contentLists, false, catalog.isbn, contentInfoList)
                 initDatePickers()
             }
             binding.bookContents.apply {
@@ -148,9 +151,15 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
         }
     }
 
-    inner class BookContentAdapter(val array: List<String> = ArrayList(), val isFirst: Boolean = true) : RecyclerView.Adapter<BookContentViewHolder>() {
-
+    inner class BookContentAdapter(var array: List<String> = ArrayList(), val isFirst: Boolean = true, val isbnInAdapter: String, val contentInfoList: List<ContentInfo>? = null) : RecyclerView.Adapter<BookContentViewHolder>() {
         val map = mutableMapOf<Int, Pair<String, Boolean>>()
+        var checkedList: List<Boolean>? = null
+
+        init {
+            if(contentInfoList != null) {
+                checkedList = contentInfoList.map { it.isChecked }.toList()
+            }
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookContentViewHolder {
             return BookContentViewHolder(BookContentItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -163,8 +172,15 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
                 holder.binding().check.visibility = View.GONE
             } else {
                 holder.binding().check.visibility = View.VISIBLE
+                if(contentInfoList != null) {
+                    Log.d(this.javaClass.simpleName, "${position} : ${checkedList!!.get(position)}")
+                    holder.binding().check.isSelected = checkedList!!.get(position)
+                }
                 holder.binding().check.setOnClickListener {
                     it.isSelected = !it.isSelected
+                    CoroutineScope(Dispatchers.Default).launch {
+                        mainViewModel.updateContentChecked(isbnInAdapter, position, it.isSelected)
+                    }
                 }
             }
         }

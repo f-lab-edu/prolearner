@@ -13,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.litholr.prolearner.R
 import com.litholr.prolearner.data.local.AppDatabase
+import com.litholr.prolearner.data.local.entity.ContentInfo
 import com.litholr.prolearner.data.local.typeconverter.BookCatalogConverter
 import com.litholr.prolearner.data.local.typeconverter.BookResultConverter
 import com.litholr.prolearner.ui.base.BaseViewModel
@@ -112,6 +113,15 @@ class MainViewModel : BaseViewModel() {
         if(savedBookInfo != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 insertSavedBookInfo(savedBookInfo!!)
+                savedBookInfo!!.catalog!!.getBookContentTableList()!!.asSequence().forEachIndexed { index, s ->
+                    val contentInfo = ContentInfo(
+                        isbn = savedBookInfo!!.isbn,
+                        contentSortNumber = index,
+                        contentTitle = s,
+                        isChecked = false
+                    )
+                    insertContentInfo(contentInfo)
+                }
             }
             PLToast.makeToast(context, "책이 저장되었습니다.")
             this._bottomNav.postValue(BottomNav.HOME)
@@ -211,6 +221,23 @@ class MainViewModel : BaseViewModel() {
     suspend fun getSavedBookInfoByISBN(isbn: String): SavedBookInfo {
         return withContext(Dispatchers.IO) {
             db!!.savedBookInfoDao().getSavedBookInfoByIsbn(isbn)
+        }
+    }
+
+    // SavedBookInfo
+    suspend fun insertContentInfo(contentInfo: ContentInfo) {
+        return withContext(Dispatchers.IO) {
+            db!!.contentInfoDao().insertContent(contentInfo)
+        }
+    }
+    suspend fun getContentInfoListByISBN(isbn: String): List<ContentInfo> {
+        return withContext(Dispatchers.IO) {
+            db!!.contentInfoDao().getContentList(isbn)
+        }
+    }
+    suspend fun updateContentChecked(isbn: String, sortNumber: Int, isChecked: Boolean) {
+        return withContext(Dispatchers.IO) {
+            db!!.contentInfoDao().updateChecked(isbn, sortNumber, isChecked)
         }
     }
 }

@@ -6,9 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName="ContentInfo")
 data class ContentInfo(
-    @PrimaryKey @ColumnInfo(name = "content_id") val contentId: Int,
     @ColumnInfo(name = "isbn") val isbn: String,
-    @ColumnInfo(name = "content_title") val contentTitle: String,
     @ColumnInfo(name = "content_sort_number") val contentSortNumber: Int,
+    @ColumnInfo(name = "content_title") val contentTitle: String,
     @ColumnInfo(name = "isChecked") val isChecked: Boolean
-)
+) {
+    @PrimaryKey(autoGenerate = true) var contentId: Int = 0
+}
