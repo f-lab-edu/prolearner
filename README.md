@@ -10,6 +10,9 @@
 ### 앱 UI구성
 피그마 ☞ [바로가기](https://www.figma.com/file/6P7HxybYPkrshwuw7uzDYN/ProLearner?node-id=0%3A1&t=F2BcA4SDd22Hv7bE-1)
 
+### 앱 Demo 시연 영상
+Youtube ☞ [바로가기](https://youtu.be/a_8SJtDCWZU)
+
 ### 추후 넣고 싶은 기능
 1. 미션을 부여해서 뱃지를 받을 수 있는 기능
 2. 책의 내용을 간단하게 테스트 할 수 있는 기능(링크드인의 기술 테스트와 비슷한 기능)
