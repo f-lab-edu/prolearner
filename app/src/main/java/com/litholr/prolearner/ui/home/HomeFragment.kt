@@ -32,7 +32,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         lifecycleScope.launch {
             mainViewModel.getSavedBookInfos().observe(this@HomeFragment) {
                 binding.savedBookList.apply {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    CoroutineScope(Dispatchers.Main).launch {
                         adapter = SavedBookAdapter(it)
                     }
                     layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
