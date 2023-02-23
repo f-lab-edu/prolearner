@@ -67,10 +67,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     val contentListlength = contentInfoList.size.toDouble()
                     val checkedListlength = contentInfoList.asSequence().count { it.isChecked }.toDouble()
                     Log.d(this.javaClass.simpleName, "${checkedListlength}/${contentListlength} = ${checkedListlength / contentListlength}")
+                    val percent = ((checkedListlength / contentListlength) * 100).toInt()
                     savedBookViewBinding.progress.apply {
                         setCornerRadius(10f)
                         setProgressPercentage((checkedListlength / contentListlength) * 100, false)
                     }
+                    savedBookViewBinding.percentage.text = "${percent}%"
                 }
             }
         }
