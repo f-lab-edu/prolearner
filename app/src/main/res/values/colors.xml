@@ -18,4 +18,6 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorTransparent">@android:color/transparent</color>
+    <color name="readCompletedColor">#F06A1E</color>
+    <color name="readingColor">#05AEC2</color>
 </resources>

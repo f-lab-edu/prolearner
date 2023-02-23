@@ -134,7 +134,7 @@
             app:rpbBackgroundTextColor="@color/colorTransparent"
             app:rpbCornerRadius="20dp"
             app:rpbProgressColor="#05AEC2"
-            app:rpbProgressTextColor="#4ADBFF"
+            app:rpbProgressTextColor="@color/colorTransparent"
             app:rpbTextPadding="12dp"
             android:elevation="10dp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -69,10 +69,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     Log.d(this.javaClass.simpleName, "${checkedListlength}/${contentListlength} = ${checkedListlength / contentListlength}")
                     val percent = ((checkedListlength / contentListlength) * 100).toInt()
                     savedBookViewBinding.progress.apply {
+                        if(percent >= 100) {
+                            setProgressDrawableColor(resources.getColor(R.color.readCompletedColor))
+                        } else {
+                            setProgressDrawableColor(resources.getColor(R.color.readingColor))
+                        }
                         setCornerRadius(10f)
                         setProgressPercentage((checkedListlength / contentListlength) * 100, false)
                     }
                     savedBookViewBinding.percentage.text = "${percent}%"
+                    savedBookViewBinding.percentage.apply {
+                        if(percent >= 100) {
+                            setTextColor(resources.getColor(R.color.readCompletedColor))
+                        } else {
+                            setTextColor(resources.getColor(R.color.readingColor))
+                        }
+                    }
                 }
             }
         }
