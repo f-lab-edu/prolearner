@@ -28,40 +28,36 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun onCreateBegin(savedInstanceState: Bundle?) {
         loadSavedBookList()
     }
-
+    // 더보기 검색 할 수 있게 (새로 추가 한 것은 위로 올릴 수 있도록- 저장한 시점도 저장 할 수 있게) 정렬기능
+    // 읽은 percentage 정도 계산해서 sorting
     private fun loadSavedBookList() {
         lifecycleScope.launch {
             mainViewModel.getSavedBookInfos().observe(this@HomeFragment) {
                 binding.savedBookList.apply {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        adapter = SavedBookAdapter(it)
-                    }
+                    adapter = SavedBookAdapter(it)
                     layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 }
             }
         }
     }
 
-    inner class SavedBookAdapter(val array: List<SavedBookInfo>) : RecyclerView.Adapter<SavedBookViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedBookViewHolder {
+    inner class SavedBookAdapter(private val savedBookInfoList: List<SavedBookInfo>) : RecyclerView.Adapter<SavedBookViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):SavedBookViewHolder {
             return SavedBookViewHolder(CardviewSavedbookinfoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
         override fun onBindViewHolder(holder: SavedBookViewHolder, position: Int) {
-            holder.bindItem(array[position])
+            holder.bindItem(savedBookInfoList[position])
         }
-        override fun getItemCount(): Int = array.size
+        override fun getItemCount(): Int = savedBookInfoList.size
     }
+
     inner class SavedBookViewHolder(private val savedBookViewBinding: CardviewSavedbookinfoBinding): RecyclerView.ViewHolder(savedBookViewBinding.root) {
         fun bindItem(item: SavedBookInfo) {
+            savedBookViewBinding.savedBookInfo = item
+            savedBookViewBinding.root.setOnClickListener {
+                mainViewModel.updateBottomNavToBook(item.bookResult, false)
+            }
             item.catalog?.let {
-                Glide.with(savedBookViewBinding.root.context).load(it.thumbnailUrl).into(savedBookViewBinding.bookImage)
-                savedBookViewBinding.bookCategory.text = it.categoryName
-                savedBookViewBinding.title.text = it.title
-                savedBookViewBinding.author.text = it.authorList.joinToString(", ")
-                savedBookViewBinding.publisher.text = it.publisher
-                savedBookViewBinding.root.setOnClickListener {
-                    mainViewModel.updateBottomNavToBook(item.bookResult, false)
-                }
                 CoroutineScope(Dispatchers.Main).launch {
                     val contentInfoList = mainViewModel.getContentInfoListByISBN(it.isbn)
                     val contentListlength = contentInfoList.size.toDouble()
@@ -89,6 +85,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
         }
     }
+
+
 }
 
 
