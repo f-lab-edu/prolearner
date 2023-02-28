@@ -18,10 +18,13 @@ interface SavedBookInfoDao {
 
     @Query("SELECT * FROM SavedBookInfo WHERE EXISTS (SELECT * FROM SavedBookInfo WHERE isbn = :isbn)")
     fun isBookExisted(isbn: String): Boolean
-//
-//    @Insert
-//    fun initBookCatalog(catalog: BookCatalog)
-//
+
     @Query("SELECT * FROM SavedBookInfo WHERE isbn = :isbn")
     fun getSavedBookInfoByIsbn(isbn: String): SavedBookInfo
+
+    @Query("UPDATE SavedBookInfo SET start_date = :startDate WHERE (isbn = :isbn)")
+    fun updateStartDate(isbn: String, startDate: String)
+
+    @Query("UPDATE SavedBookInfo SET end_date = :endDate WHERE (isbn = :isbn)")
+    fun updateEndDate(isbn: String, endDate: String)
 }
