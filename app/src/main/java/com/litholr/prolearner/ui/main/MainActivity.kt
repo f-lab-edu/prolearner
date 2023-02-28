@@ -17,7 +17,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     override val layoutId: Int
         get() = R.layout.activity_main
-    override val viewModel: MainViewModel by viewModels()
+    override val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory((application as MainApplication).appDBRepository)
+    }
 
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController

@@ -5,6 +5,7 @@ import com.litholr.prolearner.data.local.entity.SavedBookInfo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import api.naver.BookResult
 import api.naver.NaverSearching
@@ -12,6 +13,7 @@ import com.ejjang2030.bookcontentparser.api.naver.BookCatalog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.litholr.prolearner.R
+import com.litholr.prolearner.data.local.AppDBRepository
 import com.litholr.prolearner.data.local.AppDatabase
 import com.litholr.prolearner.data.local.entity.ContentInfo
 import com.litholr.prolearner.data.local.typeconverter.BookCatalogConverter
@@ -24,10 +26,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 @HiltViewModel
-class MainViewModel : BaseViewModel() {
+class MainViewModel @Inject constructor(
+    private val appDBRepository: AppDBRepository
+) : BaseViewModel() {
     var db: AppDatabase? = null
 
     var naver = NaverSearching(SecretId.NAVER_CLIENT_ID, SecretId.NAVER_CLIENT_ID_SECRET)
@@ -223,13 +228,25 @@ class MainViewModel : BaseViewModel() {
             db!!.savedBookInfoDao().getSavedBookInfoByIsbn(isbn)
         }
     }
+    suspend fun updateStartingDate(isbn: String, startingDate: String) {
+        return withContext(Dispatchers.IO) {
+            db!!.savedBookInfoDao().updateStartDate(isbn, startingDate)
+        }
+    }
+    suspend fun updateEndingDate(isbn: String, endingDate: String) {
+        return withContext(Dispatchers.IO) {
+            db!!.savedBookInfoDao().updateEndDate(isbn, endingDate)
+        }
+    }
 
     // SavedBookInfo
-    suspend fun insertContentInfo(contentInfo: ContentInfo) {
+    suspend fun insertContentInfo(contentInfo: ContentInfo) { // suspend viewmodel x repository로 만들어 놓고
+        // viewmodel에서 repository에 접근해서 clean architecture 레이어를 나눠서 할 수 있도록(데이터의 흐름을 일정한 방향으로)
         return withContext(Dispatchers.IO) {
             db!!.contentInfoDao().insertContent(contentInfo)
         }
     }
+    // TODO 수정
     suspend fun getContentInfoListByISBN(isbn: String): List<ContentInfo> {
         return withContext(Dispatchers.IO) {
             db!!.contentInfoDao().getContentList(isbn)
