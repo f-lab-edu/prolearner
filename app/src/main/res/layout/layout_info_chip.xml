@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="keyOfLayoutInfoChip"
+            type="String" />
+        <variable
+            name="valueOfLayoutInfoChip"
+            type="String" />
+    </data>
     <LinearLayout
         android:id="@+id/layout"
         android:clickable="true"
@@ -17,6 +25,7 @@
             android:layout_width="wrap_content"
             android:textStyle="normal"
             tools:text="정보제공"
+            android:text="@{keyOfLayoutInfoChip}"
             android:layout_weight="1"
             android:textSize="9sp"
             android:paddingHorizontal="7dp"
@@ -26,12 +35,13 @@
             android:includeFontPadding="false"
             android:fontFamily="@font/noto_sans_kr_medium"
             android:layout_height="match_parent"
-            android:id="@+id/title"/>
+            android:id="@+id/key"/>
         <TextView
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:textStyle="normal"
             tools:text="테스트입니다."
+            android:text="@{valueOfLayoutInfoChip}"
             android:layout_weight="2"
             android:ellipsize="marquee"
             android:textAlignment="center"
@@ -43,7 +53,7 @@
             android:fontFamily="@font/noto_sans_kr_medium"
             android:layout_height="match_parent"
             android:background="@color/colorTransparent"
-            android:id="@+id/text"
+            android:id="@+id/value"
             android:singleLine="true" />
     </LinearLayout>
 </layout>

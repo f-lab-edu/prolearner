@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ejjang2030.bookcontentparser.api.naver.BookCatalog
+import com.google.android.material.chip.Chip
 import com.litholr.prolearner.R
 import com.litholr.prolearner.data.local.entity.ContentInfo
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
@@ -17,6 +18,7 @@ import com.litholr.prolearner.databinding.BookContentItemBinding
 import com.litholr.prolearner.databinding.FragmentBookBinding
 import com.litholr.prolearner.ui.base.BaseFragment
 import com.litholr.prolearner.ui.main.MainViewModel
+import com.litholr.prolearner.utils.ChipInfo
 import com.litholr.prolearner.utils.CustomDatePicker
 import kotlinx.coroutines.*
 import java.util.*
@@ -61,6 +63,7 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
         }
     }
 
+
     private fun initUI(catalog: BookCatalog, isFirst: Boolean = true, contentInfoList: List<ContentInfo>? = null) {
         CoroutineScope(Dispatchers.Main).launch {
             val contentLists = catalog.getBookContentTableList()
@@ -69,18 +72,11 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
                 return@launch
             }
             binding.catalog = catalog
-            binding.infoAuthor.apply {
-                title.text = "저자"
-                text.text = catalog.authorList.joinToString(", ")
-            }
-            binding.infoPublisher.apply {
-                title.text = "출판사"
-                text.text = catalog.publisher
-            }
-            binding.infoResourceFrom.apply {
-                title.text = "정보제공"
-                text.text = catalog.contentsSourceMallName ?: "미확인"
-            }
+            binding.chipInfo = ChipInfo(
+                Pair("저자", catalog.authorList.joinToString(", ")),
+                Pair("출판사", catalog.publisher),
+                Pair("정보제공", catalog.contentsSourceMallName ?: "미확인")
+            )
             binding.expandTextView.setOnExpandStateChangeListener { textView, isExpanded -> }
             val bookAdapter: BookContentAdapter
             if(isFirst && contentInfoList == null) {
@@ -117,6 +113,7 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
                     weekDayShortName: String
                 ) {
                     binding.startDatePick.text = "$year.${monthNumber + 1}.$day"
+
                 }
 
             }).apply {
@@ -142,6 +139,9 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
                     weekDayShortName: String
                 ) {
                     binding.endDatePick.text = "$year.${monthNumber + 1}.$day"
+                    CoroutineScope(Dispatchers.Default).launch {
+                        // mainViewModel.updateStartingDate(, "$year.${monthNumber + 1}.$day")
+                    }
                 }
 
             }).apply {
