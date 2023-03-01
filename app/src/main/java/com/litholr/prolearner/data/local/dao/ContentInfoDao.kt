@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.litholr.prolearner.data.local.entity.ContentInfo
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ContentInfoDao {
@@ -13,7 +14,7 @@ interface ContentInfoDao {
     fun insertContent(contentInfo: ContentInfo)
 
     @Query("SELECT * FROM ContentInfo WHERE isbn = :isbn ORDER BY content_sort_number")
-    fun getContentList(isbn: String): List<ContentInfo>
+    fun getContentList(isbn: String): Flow<List<ContentInfo>>
 
     @Query("UPDATE ContentInfo SET isChecked = :isChecked WHERE (isbn = :isbn AND content_sort_number = :contentSortNumber)")
     fun updateChecked(isbn: String, contentSortNumber: Int, isChecked: Boolean)

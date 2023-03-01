@@ -6,21 +6,22 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ejjang2030.bookcontentparser.api.naver.BookCatalog
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SavedBookInfoDao {
 
     @Query("SELECT * FROM SavedBookInfo")
-    fun getSavedBookInfoAll(): List<SavedBookInfo>
+    fun getSavedBookInfoAll(): Flow<List<SavedBookInfo>>
 
     @Insert
     fun insertSavedBookInfo(savedBookInfo: SavedBookInfo)
 
     @Query("SELECT * FROM SavedBookInfo WHERE EXISTS (SELECT * FROM SavedBookInfo WHERE isbn = :isbn)")
-    fun isBookExisted(isbn: String): Boolean
+    fun isBookExisted(isbn: String): Flow<Boolean>
 
     @Query("SELECT * FROM SavedBookInfo WHERE isbn = :isbn")
-    fun getSavedBookInfoByIsbn(isbn: String): SavedBookInfo
+    fun getSavedBookInfoByIsbn(isbn: String): Flow<SavedBookInfo>
 
     @Query("UPDATE SavedBookInfo SET start_date = :startDate WHERE (isbn = :isbn)")
     fun updateStartDate(isbn: String, startDate: String)

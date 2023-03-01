@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ejjang2030.bookcontentparser.api.naver.BookCatalog
-import com.google.android.material.chip.Chip
 import com.litholr.prolearner.R
 import com.litholr.prolearner.data.local.entity.ContentInfo
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
@@ -32,7 +31,13 @@ class BookFragment: BaseFragment<FragmentBookBinding>() {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateBegin(savedInstanceState: Bundle?) {
+
         mainViewModel.selectedBook.observe(this) { bookResult ->
+            mainViewModel.getSavedBookInfoByISBN(bookResult.isbn).observe(this) { savedBookInfo ->
+                savedBookInfo.catalog?.let {
+                    initUI(it, false, )
+                }
+            }
             GlobalScope.launch(Dispatchers.Default) {
                 if(mainViewModel.isBookExisted(bookResult.isbn)) {
                     val savedBookInfo = mainViewModel.getSavedBookInfoByISBN(bookResult.isbn)

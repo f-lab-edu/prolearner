@@ -5,6 +5,7 @@ import com.litholr.prolearner.data.local.dao.ContentInfoDao
 import com.litholr.prolearner.data.local.dao.SavedBookInfoDao
 import com.litholr.prolearner.data.local.entity.ContentInfo
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AppDBRepository @Inject constructor(
@@ -12,11 +13,7 @@ class AppDBRepository @Inject constructor(
     private val contentInfoDao: ContentInfoDao)
 {
     // SavedBookInfoDao
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun getSavedBookInfoAll(): List<SavedBookInfo> {
-        return savedBookInfoDao.getSavedBookInfoAll()
-    }
+    fun getSavedBookInfoAll(): Flow<List<SavedBookInfo>> = savedBookInfoDao.getSavedBookInfoAll()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -24,17 +21,8 @@ class AppDBRepository @Inject constructor(
         savedBookInfoDao.insertSavedBookInfo(savedBookInfo)
     }
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun isBookExisted(isbn: String): Boolean {
-        return savedBookInfoDao.isBookExisted(isbn)
-    }
-
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun getSavedBookInfoByIsbn(isbn: String): SavedBookInfo {
-        return savedBookInfoDao.getSavedBookInfoByIsbn(isbn)
-    }
+    fun isBookExisted(isbn: String): Flow<Boolean> = savedBookInfoDao.isBookExisted(isbn)
+    fun getSavedBookInfoByIsbn(isbn: String): Flow<SavedBookInfo> = savedBookInfoDao.getSavedBookInfoByIsbn(isbn)
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -55,11 +43,8 @@ class AppDBRepository @Inject constructor(
         contentInfoDao.insertContent(contentInfo)
     }
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun getContentList(isbn: String): List<ContentInfo> {
-        return contentInfoDao.getContentList(isbn)
-    }
+    fun getContentList(isbn: String): Flow<List<ContentInfo>> = contentInfoDao.getContentList(isbn)
+
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

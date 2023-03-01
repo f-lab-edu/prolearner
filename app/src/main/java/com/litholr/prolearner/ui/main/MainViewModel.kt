@@ -1,11 +1,8 @@
 package com.litholr.prolearner.ui.main
 
 import android.content.Context
+import androidx.lifecycle.*
 import com.litholr.prolearner.data.local.entity.SavedBookInfo
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import api.naver.BookResult
 import api.naver.NaverSearching
@@ -205,56 +202,15 @@ class MainViewModel @Inject constructor(
     
     // for room db
     // SavedBookInfo
-    fun getSavedBookInfos(): LiveData<List<SavedBookInfo>> {
-        return liveData {
-            val data = withContext(Dispatchers.IO) {
-                db!!.savedBookInfoDao().getSavedBookInfoAll()
-            }
-            emit(data)
-        }
-    }
-    suspend fun isBookExisted(isbn: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            db!!.savedBookInfoDao().isBookExisted(isbn)
-        }
-    }
-    suspend fun insertSavedBookInfo(savedBookInfo: SavedBookInfo) {
-        return withContext(Dispatchers.IO) {
-            db!!.savedBookInfoDao().insertSavedBookInfo(savedBookInfo)
-        }
-    }
-    suspend fun getSavedBookInfoByISBN(isbn: String): SavedBookInfo {
-        return withContext(Dispatchers.IO) {
-            db!!.savedBookInfoDao().getSavedBookInfoByIsbn(isbn)
-        }
-    }
-    suspend fun updateStartingDate(isbn: String, startingDate: String) {
-        return withContext(Dispatchers.IO) {
-            db!!.savedBookInfoDao().updateStartDate(isbn, startingDate)
-        }
-    }
-    suspend fun updateEndingDate(isbn: String, endingDate: String) {
-        return withContext(Dispatchers.IO) {
-            db!!.savedBookInfoDao().updateEndDate(isbn, endingDate)
-        }
-    }
+    fun getSavedBookInfoAll(): LiveData<List<SavedBookInfo>> = appDBRepository.getSavedBookInfoAll().asLiveData()
+    fun isBookExisted(isbn: String): LiveData<Boolean> = appDBRepository.isBookExisted(isbn).asLiveData()
+    fun insertSavedBookInfo(savedBookInfo: SavedBookInfo) = viewModelScope.launch { appDBRepository.insertSavedBookInfo(savedBookInfo) }
+    fun getSavedBookInfoByISBN(isbn: String): LiveData<SavedBookInfo> = appDBRepository.getSavedBookInfoByIsbn(isbn).asLiveData()
+    fun updatestartDate(isbn: String, startDate: String) = viewModelScope.launch { appDBRepository.updateStartDate(isbn, startDate) }
+    fun updateendDate(isbn: String, endDate: String) = viewModelScope.launch { appDBRepository.updateEndDate(isbn, endDate) }
 
     // SavedBookInfo
-    suspend fun insertContentInfo(contentInfo: ContentInfo) { // suspend viewmodel x repository로 만들어 놓고
-        // viewmodel에서 repository에 접근해서 clean architecture 레이어를 나눠서 할 수 있도록(데이터의 흐름을 일정한 방향으로)
-        return withContext(Dispatchers.IO) {
-            db!!.contentInfoDao().insertContent(contentInfo)
-        }
-    }
-    // TODO 수정
-    suspend fun getContentInfoListByISBN(isbn: String): List<ContentInfo> {
-        return withContext(Dispatchers.IO) {
-            db!!.contentInfoDao().getContentList(isbn)
-        }
-    }
-    suspend fun updateContentChecked(isbn: String, sortNumber: Int, isChecked: Boolean) {
-        return withContext(Dispatchers.IO) {
-            db!!.contentInfoDao().updateChecked(isbn, sortNumber, isChecked)
-        }
-    }
+    fun insertContentInfo(contentInfo: ContentInfo) = viewModelScope.launch { appDBRepository.insertContent(contentInfo) }
+    fun getContentInfoListByISBN(isbn: String): LiveData<List<ContentInfo>> = appDBRepository.getContentList(isbn).asLiveData()
+    fun updateContentChecked(isbn: String, sortNumber: Int, isChecked: Boolean) = viewModelScope.launch { appDBRepository.updateChecked(isbn, sortNumber, isChecked) }
 }
